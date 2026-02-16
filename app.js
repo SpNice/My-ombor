@@ -1,88 +1,89 @@
-// Warehouse and Employee Management System
+// app.js
 
-class Product {
-    constructor(name, quantity, price) {
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
+// Import required libraries
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const CSVWriter = require('csv-writer').createObjectCsvWriter;
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+
+const app = express();
+app.use(bodyParser.json());
+app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
+
+// MongoDB model schemas (simplified)
+const UserSchema = new mongoose.Schema({ username: String, password: String });
+const ProductSchema = new mongoose.Schema({ name: String, quantity: Number, price: Number });
+const AttendanceSchema = new mongoose.Schema({ userId: String, date: Date, status: String });
+
+const User = mongoose.model('User', UserSchema);
+const Product = mongoose.model('Product', ProductSchema);
+const Attendance = mongoose.model('Attendance', AttendanceSchema);
+
+// MongoDB connection setup
+mongoose.connect('mongodb://localhost:27017/warehouse_management', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// User authentication
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username, password });
+    if (user) {
+        req.session.userId = user._id;
+        res.send('Login successful');
+    } else {
+        res.status(401).send('Unauthorized');
     }
-}
+});
 
-class Employee {
-    constructor(name, id) {
-        this.name = name;
-        this.id = id;
-        this.attendance = [];
-    }
+// Product management endpoints
+app.post('/products', async (req, res) => {
+    const newProduct = new Product(req.body);
+    await newProduct.save();
+    res.send('Product added');
+});
 
-    markAttendance(date) {
-        this.attendance.push(date);
-    }
-}
+app.get('/products', async (req, res) => {
+    const products = await Product.find();
+    res.json(products);
+});
 
-class Warehouse {
-    constructor() {
-        this.products = [];
-        this.employees = [];
-    }
+// Attendance tracking
+app.post('/attendance', async (req, res) => {
+    const attendance = new Attendance(req.body);
+    await attendance.save();
+    res.send('Attendance recorded');
+});
 
-    addProduct(product) {
-        this.products.push(product);
-    }
+// Report functionality
+app.get('/reports', async (req, res) => {
+    const attendanceRecords = await Attendance.find();
+    res.json(attendanceRecords);
+});
 
-    addEmployee(employee) {
-        this.employees.push(employee);
-    }
+// Google Sheets integration
+app.post('/sync-to-sheets', async (req, res) => {
+    const doc = new GoogleSpreadsheet('your_google_sheet_id');
+    await doc.useServiceAccountAuth(require('./path/to/creds.json'));
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[0];
 
-    generateReport() {
-        return this.products.map(p => `${p.name}: ${p.quantity} (${p.price}$)`).join('\n');
-    }
-}
+    const records = await Attendance.find();
+    const rows = records.map(record => ({ user: record.userId, date: record.date, status: record.status }));
 
-class Auth {
-    constructor() {
-        this.users = {};
-    }
+    await sheet.addRows(rows);
+    res.send('Data synced to Google Sheets');
+});
 
-    register(username, password) {
-        this.users[username] = password;
-    }
+// CSV export
+app.get('/export-csv', async (req, res) => {
+    const records = await Attendance.find();
+    const csvWriter = CSVWriter({ path: 'attendance.csv', header: [{ id: 'userId', title: 'User ID' }, { id: 'date', title: 'Date' }, { id: 'status', title: 'Status' }] });
+    await csvWriter.writeRecords(records);
+    res.send('CSV export completed');
+});
 
-    login(username, password) {
-        return this.users[username] === password;
-    }
-}
-
-class GoogleSheetsSync {
-    static syncData(data) {
-        // Placeholder for syncing data with Google Sheets
-        console.log('Syncing data to Google Sheets...');
-    }
-}
-
-class CSVExporter {
-    static export(data) {
-        const csvContent = Object.keys(data[0]).join(',') + '\n' + 
-            data.map(e => Object.values(e).join(',')).join('\n');
-        console.log('CSV Exported:', csvContent);
-    }
-}
-
-// Sample Usage
-const warehouse = new Warehouse();
-const auth = new Auth();
-auth.register('user1', 'password1');
-
-const product1 = new Product('Product A', 100, 10);
-warehouse.addProduct(product1);
-const employee1 = new Employee('Employee 1', 1);
-warehouse.addEmployee(employee1);
-
-employee1.markAttendance('2026-02-01');
-console.log(warehouse.generateReport());
-
-// Sync data to Google Sheets
-GoogleSheetsSync.syncData(warehouse.products);
-
-// Export data as CSV
-CSVExporter.export(warehouse.products);
+// Start the server
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
