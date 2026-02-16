@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ombor va Xodimlar Boshqaruv Tizimi - Absolut">
+    <meta name="theme-color" content="#1e3c72">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ombor Tizimi">
+    <link rel="manifest" href="#" id="manifest-placeholder">
+    <title>Absolut - Ombor va Xodimlar Tizimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            margin: 50px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Main App */
+        .main-app {
+            display: none;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .user-role {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            width: auto;
+            background: #e74c3c;
+            font-size: 14px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 15px;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Buttons */
+        .btn-small {
+            padding: 6px 12px;
+            width: auto;
+            font-size: 13px;
+            margin: 2px;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-info {
+            background: #3498db;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            width: auto;
+            padding: 0;
+            background: none;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: #333;
+            transform: none;
+        }
+
+        /* Image preview */
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .photo-thumbnail {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Search */
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            max-width: 400px;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters select {
+            width: auto;
+            min-width: 150px;
+        }
+
+        /* Attendance Calendar */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .employee-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .attendance-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .attendance-info {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .tab {
+                min-width: 100px;
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .tab-content {
+                padding: 15px;
+            }
+
+            .login-screen {
+                padding: 25px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="logo-container">
+            <img src="data:image/jpeg;base64," id="logoImage" class="logo" alt="Absolut Logo">
+        </div>
+        <h1>Ombor va Xodimlar Tizimi</h1>
+        <p class="subtitle">Tizimga kirish uchun login va parolni kiriting</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Login</label>
+                <input type="text" id="loginUsername" required placeholder="Login kiriting">
+            </div>
+            <div class="form-group">
+                <label>Parol</label>
+                <input type="password" id="loginPassword" required placeholder="Parol kiriting">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select id="loginRole" required>
+                    <option value="">Rolni tanlang</option>
+                    <option value="admin">Admin</option>
+                    <option value="kladovshik">Kladovshik</option>
+                </select>
+            </div>
+            <button type="submit">Kirish</button>
+        </form>
+        <p style="margin-top: 20px; text-align: center; font-size: 12px; color: #999;">
+            Demo: admin/admin (Admin) yoki klad/klad (Kladovshik)
+        </p>
+        <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 10px; border-left: 4px solid #2196F3;">
+            <div style="font-weight: 600; color: #1976D2; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">💡</span>
+                <span>Ilovani o'rnatish</span>
+            </div>
+            <div style="font-size: 12px; color: #555; line-height: 1.6;">
+                <strong>Chrome:</strong> Manzil satrining o'ng tomonidagi ⊕ belgisini bosing<br>
+                <strong>Edge:</strong> 3 nuqta (...) → "Ilovani o'rnatish"<br>
+                <strong>Telefon:</strong> Brauzer menyusidan "Uy ekraniga qo'shish"<br>
+                <br>
+                <span style="color: #2196F3;">✓ Mahalliy ilovaga aylanadi</span><br>
+                <span style="color: #2196F3;">✓ Absolut logotipi bilan</span><br>
+                <span style="color: #2196F3;">✓ Internetisiz ishlaydi</span>
+            </div>
+        </div>
+        
+        <button type="button" onclick="downloadAsApp()" style="margin-top: 15px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span style="font-size: 24px;">⬇️</span>
+            <span>Ilova sifatida yuklab olish</span>
+        </button>
+        <p style="margin-top: 10px; text-align: center; font-size: 11px; color: #666;">
+            Yuklab olingan faylni oching - avtomatik o'rnatiladi
+        </p>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-app" id="mainApp">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <img src="data:image/jpeg;base64," id="headerLogo" class="header-logo" alt="Logo">
+                    <div class="header-title">Ombor va Xodimlar Tizimi</div>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser"></span>
+                    <span class="user-role" id="currentRole"></span>
+                    <button class="logout-btn" onclick="logout()">Chiqish</button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('warehouse')">📦 Ombor</button>
+                <button class="tab" onclick="switchTab('attendance')">👥 Davomat</button>
+                <button class="tab" onclick="switchTab('reports')">📊 Hisobotlar</button>
+                <button class="tab" onclick="switchTab('settings')" id="settingsTabBtn">⚙️ Sozlamalar</button>
+            </div>
+
+            <!-- Warehouse Tab -->
+            <div class="tab-content active" id="warehouseTab">
+                <h2 style="margin-bottom: 20px;">Ombor Boshqaruvi</h2>
+                
+                <div id="kladovshikInfo" style="display: none; background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #f39c12;">
+                    <strong>ℹ️ Eslatma:</strong> Siz faqat o'z qo'shgan mahsulotlaringizni ko'rasiz va boshqarasiz.
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalProducts">0</div>
+                        <div class="stat-label">Jami Mahsulotlar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalValue">0 so'm</div>
+                        <div class="stat-label">Umumiy Qiymat</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalIncome">0</div>
+                        <div class="stat-label">Kirim Operatsiyalar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalExpense">0</div>
+                        <div class="stat-label">Chiqim Operatsiyalar</div>
+                    </div>
+                </div>
+
+                <button onclick="openModal('addProductModal')" style="margin-bottom: 20px;">+ Yangi Mahsulot Qo'shish</button>
+
+                <div class="search-bar">
+                    <input type="text" id="searchProduct" placeholder="Mahsulot qidirish..." onkeyup="filterProducts()">
+                </div>
+
+                <div class="table-container">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Nomi</th>
+                                <th>Miqdor</th>
+                                <th>O'lchov</th>
+                                <th>Holat</th>
+                                <th>Narx</th>
+                                <th>Umumiy</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsBody">
+                            <tr>
+                                <td colspan="8" class="empty-state">
+                                    <div>Ma'lumotlar yo'q. Yangi mahsulot qo'shing.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Attendance Tab -->
+            <div class="tab-content" id="attendanceTab">
+                <h2 style="margin-bottom: 20px;">Xodimlar Davomati</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEmployees">0</div>
+                        <div class="stat-label">Jami Xodimlar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="presentToday">0</div>
+                        <div class="stat-label">Bugun Ishda</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="absentToday">0</div>
+                        <div class="stat-label">Bugun Yo'q</div>
+                    </div>
+                </div>
+
+                <button onclick="openModal('addEmployeeModal')" style="margin-bottom: 20px;">+ Yangi Xodim Qo'shish</button>
+
+                <div class="filters">
+                    <input type="date" id="attendanceDate" onchange="loadAttendance()">
+                    <button class="btn-info" onclick="markAllPresent()">Hammasini Ishda deb belgilash</button>
+                </div>
+
+                <div class="attendance-grid" id="attendanceGrid">
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="tab-content" id="reportsTab">
+                <h2 style="margin-bottom: 20px;">Hisobotlar</h2>
+
+                <div class="filters">
+                    <select id="reportType" onchange="generateReport()">
+                        <option value="warehouse">Ombor Tarixi</option>
+                        <option value="attendance">Davomat Hisoboti</option>
+                    </select>
+                    <input type="month" id="reportMonth" onchange="generateReport()">
+                </div>
+
+                <div id="reportContent">
+                    <p class="empty-state">Hisobot turini va oyni tanlang</p>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settingsTab">
+                <h2 style="margin-bottom: 20px;">Sozlamalar</h2>
+
+                <div class="card" style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px;">👤 Foydalanuvchilar Boshqaruvi</h3>
+                    <p style="margin-bottom: 15px;">Foydalanuvchilarni qo'shish, o'zgartirish va o'chirish</p>
+                    
+                    <button class="btn-success" onclick="openModal('addUserModal')" style="margin-bottom: 15px;">+ Yangi Foydalanuvchi</button>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Login</th>
+                                    <th>Rol</th>
+                                    <th>Yaratilgan</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #fff9e6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px;">🔑 Mening Parolim</h3>
+                    <p style="margin-bottom: 15px;">O'z parolingizni o'zgartirish</p>
+                    
+                    <form id="changePasswordForm" onsubmit="changeMyPassword(event)">
+                        <div class="form-group">
+                            <label>Joriy Parol</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Yangi Parol</label>
+                            <input type="password" id="newPassword" required minlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label>Yangi Parolni Tasdiqlash</label>
+                            <input type="password" id="confirmPassword" required minlength="4">
+                        </div>
+                        <button type="submit" class="btn-warning">Parolni O'zgartirish</button>
+                    </form>
+                </div>
+
+                <div class="card" style="background: #d4edda; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px;">🔄 Google Sheets Onlayn Sinxronizatsiya</h3>
+                    <p style="margin-bottom: 15px; color: #155724;">
+                        ✅ URL allaqachon sozlangan - hech narsa qilish shart emas!<br>
+                        Barcha ma'lumotlar Google Sheets da saqlanadi. Hammasi real vaqtda ko'rinadi!
+                    </p>
+                    
+                    <div class="form-group">
+                        <label>Google Sheets API URL (Avtomatik sozlangan)</label>
+                        <input type="text" id="googleApiUrl" readonly style="background: #f0f0f0; margin-bottom: 10px;">
+                        <small style="color: #666; display: block; margin-bottom: 10px;">Bu URL allaqachon o'rnatilgan. O'zgartirish kerak emas!</small>
+                    </div>
+                    
+                    <div id="syncStatus" style="padding: 12px; border-radius: 8px; margin-bottom: 15px; display: none;"></div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                        <button class="btn-success" onclick="syncToCloud('upload')">
+                            ⬆️ Yuklash (Upload)
+                        </button>
+                        <button class="btn-info" onclick="syncToCloud('download')">
+                            ⬇️ Yuklab olish (Download)
+                        </button>
+                    </div>
+                    
+                    <div style="background: #fff; padding: 12px; border-radius: 8px; border-left: 4px solid #28a745;">
+                        <strong>📊 Sinxronizatsiya holati:</strong>
+                        <div id="syncInfo" style="margin-top: 8px; font-size: 13px; color: #666;">
+                            Tayyor
+                        </div>
+                        <div style="margin-top: 8px; font-size: 12px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="autoSyncCheckbox" onchange="toggleAutoSync(this.checked)">
+                                <span>⚡ Avtomatik sinxronizatsiya (har 5 soniyada - real vaqt rejimida)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 12px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196F3;">
+                        <strong style="color: #1976D2;">💡 Qanday ishlaydi?</strong>
+                        <div style="margin-top: 8px; font-size: 13px; color: #555; line-height: 1.6;">
+                            1. Avtomatik sinxronizatsiyani yoqing<br>
+                            2. Har 5 soniyada yangi ma'lumotlar yuklanadi<br>
+                            3. Siz qo'shgan mahsulotlar avtomatik saqlanadiпо<br>
+                            4. Boshqa foydalanuvchilarning o'zgarishlarini ko'rasiz<br>
+                            <br>
+                            <span style="color: #27ae60; font-weight: 600;">✓ Hech narsa sozlash kerak emas - hammasi tayyor!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #d4edda; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px;">📊 Google Sheets Integratsiya (CSV Export)</h3>
+                    <p style="margin-bottom: 15px;">Ma'lumotlarni Google Jadvaliga eksport qiling</p>
+                    
+                    <div class="form-group">
+                        <label>Google Sheets URL</label>
+                        <input type="text" id="googleSheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/..." style="margin-bottom: 10px;">
+                        <small style="color: #666; display: block; margin-bottom: 10px;">Google Jadval havolasini kiriting (Google Sheets bo'lishi kerak)</small>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-info" onclick="exportToGoogleSheets('products')">Mahsulotlarni Eksport</button>
+                        <button class="btn-info" onclick="exportToGoogleSheets('attendance')">Davomatni Eksport</button>
+                        <button class="btn-info" onclick="exportToGoogleSheets('all')">Hammasi</button>
+                    </div>
+                    
+                    <div id="exportStatus" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+                    
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ccc;">
+                    
+                    <h4 style="margin-bottom: 10px;">📥 Eksport (CSV Format)</h4>
+                    <p style="margin-bottom: 10px; font-size: 14px; color: #666;">Ma'lumotlarni CSV formatda yuklab oling va Google Sheets ga import qiling</p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-success" onclick="downloadCSV('products')">Mahsulotlar CSV</button>
+                        <button class="btn-success" onclick="downloadCSV('transactions')">Operatsiyalar CSV</button>
+                        <button class="btn-success" onclick="downloadCSV('employees')">Xodimlar CSV</button>
+                        <button class="btn-success" onclick="downloadCSV('attendance')">Davomat CSV</button>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #fff3cd; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px;">⚠️ Xavfli Zona</h3>
+                    <p style="margin-bottom: 15px;">Quyidagi amallar barcha ma'lumotlarni o'chiradi!</p>
+                    <button class="btn-danger" onclick="confirmClearData()">Barcha Ma'lumotlarni O'chirish</button>
+                </div>
+
+                <div class="card" style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 10px;">📊 Tizim Ma'lumotlari</h3>
+                    <p>Mahsulotlar: <strong id="settingsProducts">0</strong></p>
+                    <p>Xodimlar: <strong id="settingsEmployees">0</strong></p>
+                    <p>Operatsiyalar: <strong id="settingsOperations">0</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addProductModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;">Yangi Mahsulot Qo'shish</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>Mahsulot Nomi *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Miqdor *</label>
+                        <input type="number" id="productQuantity" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>O'lchov birligi *</label>
+                        <select id="productUnit" required>
+                            <option value="dona">dona</option>
+                            <option value="kg">kg</option>
+                            <option value="litr">litr</option>
+                            <option value="metr">metr</option>
+                            <option value="m²">m²</option>
+                            <option value="paket">paket</option>
+                            <option value="quti">quti</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Narx (so'm) *</label>
+                    <input type="number" id="productPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategoriya</label>
+                    <input type="text" id="productCategory" placeholder="Masalan: Qurilish materiallari">
+                </div>
+                <div class="form-group">
+                    <label>Holati *</label>
+                    <select id="productStatus" required>
+                        <option value="enough">✅ Yetarli</option>
+                        <option value="low">⚠️ Kam (Tez orada buyurtma qiling)</option>
+                        <option value="order">🔴 Buyurtma qilish kerak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Minimal miqdor (ogohlantirish uchun)</label>
+                    <input type="number" id="productMinQuantity" step="0.01" placeholder="Masalan: 10">
+                    <small style="color: #666;">Bu miqdordan kam bo'lsa, ogohlantirish ko'rsatiladi</small>
+                </div>
+                <div class="form-group">
+                    <label>Rasm</label>
+                    <input type="file" id="productPhoto" accept="image/*" onchange="previewImage('productPhoto', 'productPhotoPreview')">
+                    <img id="productPhotoPreview" class="image-preview" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label>Izoh</label>
+                    <textarea id="productComment" rows="3"></textarea>
+                </div>
+                <button type="submit">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('transactionModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;" id="transactionTitle">Kirim/Chiqim</h2>
+            <form id="transactionForm">
+                <input type="hidden" id="transactionProductId">
+                <div class="form-group">
+                    <label>Tur *</label>
+                    <select id="transactionType" required>
+                        <option value="income">Kirim</option>
+                        <option value="expense">Chiqim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Miqdor *</label>
+                    <input type="number" id="transactionQuantity" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Narx (so'm) *</label>
+                    <input type="number" id="transactionPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Rasm</label>
+                    <input type="file" id="transactionPhoto" accept="image/*" onchange="previewImage('transactionPhoto', 'transactionPhotoPreview')">
+                    <img id="transactionPhotoPreview" class="image-preview" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label>Izoh</label>
+                    <textarea id="transactionComment" rows="3"></textarea>
+                </div>
+                <button type="submit">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal" id="addEmployeeModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addEmployeeModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;">Yangi Xodim Qo'shish</h2>
+            <form id="addEmployeeForm">
+                <div class="form-group">
+                    <label>F.I.O. *</label>
+                    <input type="text" id="employeeName" required>
+                </div>
+                <div class="form-group">
+                    <label>Lavozim</label>
+                    <input type="text" id="employeePosition">
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="tel" id="employeePhone">
+                </div>
+                <div class="form-group">
+                    <label>Rasm</label>
+                    <input type="file" id="employeePhoto" accept="image/*" onchange="previewImage('employeePhoto', 'employeePhotoPreview')">
+                    <img id="employeePhotoPreview" class="image-preview" style="display: none;">
+                </div>
+                <button type="submit">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addUserModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;">Yangi Foydalanuvchi</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label>Login *</label>
+                    <input type="text" id="newUserLogin" required minlength="3">
+                    <small style="color: #666;">Kamida 3 ta belgi</small>
+                </div>
+                <div class="form-group">
+                    <label>Parol *</label>
+                    <input type="password" id="newUserPassword" required minlength="4">
+                    <small style="color: #666;">Kamida 4 ta belgi</small>
+                </div>
+                <div class="form-group">
+                    <label>Parolni Tasdiqlash *</label>
+                    <input type="password" id="newUserPasswordConfirm" required minlength="4">
+                </div>
+                <div class="form-group">
+                    <label>Rol *</label>
+                    <select id="newUserRole" required>
+                        <option value="">Rolni tanlang</option>
+                        <option value="admin">Admin - To'liq kirish huquqi</option>
+                        <option value="kladovshik">Kladovshik - Cheklangan kirish</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>F.I.O.</label>
+                    <input type="text" id="newUserFullName" placeholder="To'liq ism (ixtiyoriy)">
+                </div>
+                <button type="submit">Qo'shish</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('editUserModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;">Foydalanuvchini Tahrirlash</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserLogin">
+                <div class="form-group">
+                    <label>Login</label>
+                    <input type="text" id="editUserLoginDisplay" disabled style="background: #f0f0f0;">
+                    <small style="color: #666;">Login o'zgartirib bo'lmaydi</small>
+                </div>
+                <div class="form-group">
+                    <label>Yangi Parol</label>
+                    <input type="password" id="editUserPassword" minlength="4">
+                    <small style="color: #666;">Bo'sh qoldiring agar parolni o'zgartirmoqchi bo'lmasangiz</small>
+                </div>
+                <div class="form-group">
+                    <label>Parolni Tasdiqlash</label>
+                    <input type="password" id="editUserPasswordConfirm" minlength="4">
+                </div>
+                <div class="form-group">
+                    <label>Rol *</label>
+                    <select id="editUserRole" required>
+                        <option value="admin">Admin - To'liq kirish huquqi</option>
+                        <option value="kladovshik">Kladovshik - Cheklangan kirish</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>F.I.O.</label>
+                    <input type="text" id="editUserFullName">
+                </div>
+                <button type="submit">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        
+        // Create install button
+        window.addEventListener('load', () => {
+            const installButton = document.createElement('button');
+            installButton.textContent = '📱 Ilovani O\'rnatish';
+            installButton.id = 'installButton';
+            installButton.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 999; display: none; padding: 12px 20px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; border: none; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer;';
+            document.body.appendChild(installButton);
+
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        installButton.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
+            });
+        });
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installButton');
+            if (btn) btn.style.display = 'block';
+        });
+
+        window.addEventListener('appinstalled', () => {
+            const btn = document.getElementById('installButton');
+            if (btn) btn.style.display = 'none';
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Create service worker inline
+                const swCode = `
+                    self.addEventListener('install', (event) => {
+                        self.skipWaiting();
+                    });
+                    
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(clients.claim());
+                    });
+                    
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request).then((response) => {
+                                return response || fetch(event.request);
+                            })
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl).catch(() => {});
+            });
+        }
+
+        // Initialize logo
+        const logoBase64 = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAICAgICAQICAgIDAgIDAwYEAwMDAwcFBQQGCAcJCAgHCAgJCg0LCQoMCggICw8LDA0ODg8OCQsQERAOEQ0ODg7/2wBDAQIDAwMDAwcEBAcOCQgJDg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg7/wAARCAKAAoADASIAAhEBAxEB/8QAHgABAQEBAAIDAQEAAAAAAAAAAAIBAwgJBAcKBQb/xABnEAACAQIEBAMFAgYMCQIPEQAAAQIDEQQFBiEHEjFBCFFhCRMiMnGBkRQjQqGxwRUWJDNSYnKCorKz0RcYU5KTo8LS8GS0GScoNERUVVZjZXN1lKThJSYpNTdDRmZ2g4SFlcPT4vH/xAAcAQADAAIDAQAAAAAAAAAAAAAAAQIHCAMFBgT/xABGEQACAQIEAwUFBQYEBAUFAAAAAQIDEQQFBiExQVESYXGBsRMikaGyMmJywdEUJTVCwvAHI4KSFjPi8RUkotLhNkNSU2P/2gAMAwEAAhEDEQA/APdtzM1Xb6G8haVkejbsdOErXNAIKSANSuzpyCvYo5pPmLK5WY1YVwMJb3KtdMzlstx3AdUVFW3MLj0JuwNNs/I2PUtqwh2IS23K7AEXKAAAYANSuikhWMA7m2dxlGFKPmbZI0m4XJ5fUpbIAkLgFKLdiuXfoAWOYOjikZZAIizNs/IsABnKglZmgAAAAdmAVtboxtboxXCxIAC4WBD6nSz8iWtguHIlJ3WxYAx2QMauzQArDojLK5oAd2S1sSdBa4EnMFWVw477ABIK5WZysAMMauaAAnlK6IAdykzH0ZBbVybNFi4mA1K4asxWE0YACbEWD3RLVkUZLoVcd9iCH8zLIfzMYjOXm6mcvKtjquiD3RS4COKd2UU1ZEX3sAGkO93sWCgOYNcd7mATYxq5Di2zoBhY4NWbRh0kk2cyyT5AAOMpIGpXC3Z1SUUBRiXKvM3m9BJ3ZPYjdgWnd9A1cyKfVlBwKfcYlYS6GmNXQhcSDpFWfmUoqyKE3YeyBrdzDUri3GjAXyocqHYdrkdzWrIqyuaF7FbEJXKSsjQTckWXkCrKxlmIDAbZ33KSsAEpXRvL6lAAC2K5mSO4roqzNbujCkt9zeVCuFmyAXyo3sK4WIW7N5fUoCLtYnl9TUlbfc0ABto26m2VjUlZbG9gAjbyNST9DeVBKwBsS0kzLK/Q6GNJsAuiLLyFl5AAIxrbyM5fUoABPL6ks6AAOV35GNu3Sx2svIyyGI4rdll8qJad9h3FZmA2zMHdC3G3kY1f0DdkZd3GBjVmYW1djlQCIBfKjGkkA7Eky6lAdwv1OYLaTZNn5FXB2MMl0NMauhk2IFkU4+RPcBWAAKuOwJcblB9CSDk7x9QndX6F9VuS4WWxaYAxpWNAwIasYW1clqzACWrvqZyr/hFDsBLQNSuwk7rYsCjLK5oBPEAVGPmavlRoWGOwMe6sty0tt0SFjErlWVtzQS3uNGPZo0AaKsDb2MKj3FcdjLstdABXC4AKj1EIk1K6LAAOwAAaQBtm9rFpWRNx9lnM2zaLBI0jLKwsrmgBgGpb+RvL6gPiiS0lY1bIrm26AG5zUW2byM6J3fQ0m7Dc5cthZHV9GcxoEkwABlWQAAAAAAzLIWRoAloyyMcd9igBJPKzLOxYADmDoY1dAPcgFcvqY07gHkYZZWKs/IwBEOOxPLY6gAscwW1dktO5VxWMAfkS47DuhINWJKj3NauxiIBrTuZZ+QBYxpW2JdrepZjVykwRBllcpq3qYUFjm+rB0MSs+oEkAtq6CVgDYi1h1RT6kjJaIlHdW2Rh0JkrxsNMRJlkwvJ7G3Q2BD6mHQ52fkAHQAW5tkG4Bb9ClHfc1KyNE2A+g6s1K7KtsSUkYopO5QBLZQAAJBa46s2zCW5Yy+BKW+5VrAEkAG2bRVlboICbO5VkjQAAGpXKS23IuVYmzKsiuV2M7CKNXU179CVuWlYB3uRaxtmWACz5mWVhZXN7mtNICrIwA1K6AYszC1sjbLyFcCF8yLFkBXEH0ZKW25QEFrGWQsjQAzLIWQd7bBJ9wEbaxllc0BcNzLIWRvYmz8wFuGttjLMpJ33ZoXE+JFmYdBZeQ7jVjmLXOll5ALlEpbbmNWZZEvmBcSVe5hllYqzsYUPZkWYtYsAKz5HMFNb7EvZgK5korsTZlmXV7DQiAW15EtWY7gYH0YBQmcwW1sS1ZAQYS07lAYyLWMLauZysq4iQVysxqwWFYm6uQ+rKabZPcBbon4rlB9GQnuUhWJknclbS3Ojdxy3Q7iMBm6dmaUBjbvtuXFMlJrZnTsQ2AAs29jolZCKSMS7mgEFA1K7MF7FJAa1ZmpJoLfqUJsrZGJWNA6skkFJeYSsygAdEAbZ2FcdmZ3LSsxZGkFJWAMf5zVGVt2Ay10RNt+ha6AB2HRAGpXAs1K6N5UErI0i4uZllc0AQXJbdyjLI0BgAy6uAGgy7faxlm+4AUBGPW5dkAEAuyFkAEAuyFkAEApx32HKwAkF2QsgAgFNbbBLbcAJBr6mAAAAAALXACBPKrFAd2M5m2uXa4tYdwOdrAqXUkoRPKrE2+K50ACscwU15GNWYE+JLSbIfU6GNIAIMauimmkYXcixLXkSdDLK4xEAPqwAzV3Ob6lky6lIfEkh9WWZZFEtEdiWtjq0rMgBI5lpWRtrgpbisY0mQdDGlZjEb3BtrlLoQCQXQ0AniywLrzBnLuOw0jSo9wk7lCbGwY722Ks2LMkkhdzpG1vUyzNSs7sB8SjbPyNj1KIbHYnl2K7ACK4A1JtlKFzolZeoDOfLbqaW1cJWuIomz8hZ3LfVgVxk8u5QAhAACCyANsyuVAMgFpWYauxXAizFvT8x06IE7jSuRb1KS38zQUOwAArjsgDbMWYrhZGA2zFmAbGA2zFmFw2MBtmLMLsLIwG2aMEFkLIxpWexoLuKxzB0e6JcdthhYkWZtnfoUugrkkAuyuTZjAwAAAJcdygMnc52fkDp2Jcdth3KJBtrGFE2uQ1v0MOhLS3YCaJJa22RXc2zQCsc7PyMOhLTuUmKxNl5GNLlNMfQoggG2aMABZeRDTu9iwUmUcxZeRtmYUKxMuxJbVyLWAQAF9yrsllpWNAIY0AAJFAdxZgV2N7F3TZpC2Za3sIkuPQ0JWQAB3NcW0EtyyGWkYlZGg1K4iuBlmXZWNVkrWuAGkXHoaZHoaQ+IW3AAAoADuIACuX1NSsJsCUroqytuaBNjsAALcqwBqW/kby+ogJB0WyAxInlYUd9ygIZlkLIqz8hZ+QAYCuXbqOX1ANiQVy+o5fUAsSCuX1HL6gLYkFcrMswHsjLXMsirPyMANmS477GWdiwMNzmPtsdDGk1uFwI+248yuVdjGncEBgAC4OxlkY4+RQKuTYhqzMKfUcuwxEgAAFrkNWZYHcDmC2rvqTZlXAbPoTJbFLdlW2sMlo4AuUbdCAJJadyToS1ZdR3ETa5Lj5FAsmxDVmYW1dkdwEH0ZzOge6KTKucyZdSu5jV2UKxNm0bKO2xS2QfRgmSAAJBEFJJok6CZycARZ3LBIkSlvuXHqYWuiAOJoKXQqy8iGxoxLY36A1fMhFBJ33LtYACkgWkrGJXXUrsK4xawAIAAFLoAGWZVkaBXHZgAAUAaldFWViAuSkyrK5vcrl3ACQW1t5BLbzAZNmLMsCuLcyyFkjQK4wAAuKyAAFdgAAG41YAABbNiwAC49gZZM0DuIyyMasUAuUkcwVy7lWXkO6FY5g6WXkLLyGBysibMt9WAEcwW1t5EtWADAAAWMsrE2ZYLuS1Y5gqXYkYgAAAyyuaAO4jGmzlKLOrdiW7spXFY5dgXZeRAwaJaSRJ0Jl2GmQyTLI0FkHMFcu3UkAJkiToQ+pVyuJgA7DIaA7gpJ3ApFLoAOrIEY+hprVkbZrcAMSfMdY9TErovsQ3cvgADbNoQ+ASd0WOwAtKwKj3EV3KExgAEAAF1LskAGR7lAEtlJAAqzuLgUYluUlY01K4iWYLMrlZq2QAiUndbFgC4lAAEAAAA9wAAHYAAAsgAAHZAAAMAAAAAAQAACsgAAHZgA1K7AW5gNasYBPEHM6GWVirha5AK5WY1YoGiWrslrcsAJHO68wVy7dSQGAAUmS0Q/mZhdlcxrqUSSAAAmXYyz8iwWncCeVWJlHui7q5otyHc+Ob+Sy5x2uc+5QcSH1Zhb3RLVkUiWrmGP5TQUScwVLsSAcGQ0+Yw6HPuXcdkUl3KMSsjSWJ2BSXcxK5SVkIQaujeuwNS3JZSKjG21y+X1MXzIskvgTy+pS2QAFJA1K6NsrGpWRLYzVsgASANSuYVHuAFWXkAL2JsUkDUroRV73+wpKyEULKxoK5dhCJNTt2uEnfcpKwrjsF08jQCd2VsAAO9hbsAAkpJIA2zFmAzDbPyKskzRXAiz8glt5FgVwJ5fUcu/UoCuwFl5Cy8gAuAsvIWXkAAE8vqUoXXX8xfKjeiC7Ezk4bdb/YS00zuAuJNnCz8jLPyOztfdjlTQ7lHEFOLTMs0UBgAAVgAU0rATwJJl2KBSuPicwW1dkvZlCtYwxpWNAEkNWMLauS1ZgMwdgAFYlqy6knR7olqyOQgkAABlt73NBj2QxMxvtYhq7Ne7BYENWZLV0VLqYBPHc5gppWJKTIZjVyDoQ1ZlEmENblmNXAaJTd1uWCl1ARq6GguPQTGuISXKaAQcgOi6IhJ8xYDW+4NXUwtfKJlGgAgAVHuI9SgAlrcpKyAFctIdjEry36FKN3dliuBiSXQ0G2fkSBSSstjQuiAmyrAAC2QK4ANs/IRVkjAbZ3KSs+pNxkrqXZeQBNwAAEAAAAAAAAAFiAAJAAuPQ0QrgAAK4JfUoh9QBcTBd+YAFgAABjXkEtjQO4Cy8jnd+Z0Odn5FXEAAUKwFkBYGHiRZ2MOhj+UdwsQACiOYsvI5vqzoH0YDOYFmB3E0TLsSdCH1ZZBgAACX0JOhMuxaAmyOb6s6GPoMl9SCH8xYAk5g19WYWuBDIfzGFvoQMRdkaAAwXHZPzILTuiGykjV03NS3MLSsIruNAK5duoFmpWRoBxisB3HctKz6gMLoaAQUkDbM1K66ldgGBa47lpWYhcAla5oBPE5PEAAXAW7ABqVxFhLe5ZiVkaS2AAAgAAEAAK5duoCJBXL6mNWQDMANSugAw2zN5fUoAOZtrl2XkAFcxKyNAALXAAe6AVjLrzIK5SQHawAK5duoDJBTVl1MSuwAwFcvqGrLqAEgAAJa22MtYsxq5VwJs2UugSsjSiWRZmHTsS1ZdQJIauiWrMsmXUpFOxIAKJMfysg6PdENWQAYY+hoKTJaItYwtq5BRIMauaBoDnawLauzOX1KugOL2aTBbVyXsxkW3JauQdCGrMZLRhjSszQ+jLJAMTuikrsllbFJbGg1fMSVyuErs6JXJskWmr7CY97G8qN7AEDVwAaldgMJbli1gSxpA1K5h0tYkodEAABmrqizLI0llpAAC4BxYAC6iKNW7KSsLK5pLAAAkAAAAA1K7KsgAxJNFdgAFa4AADAAAAAAJYAADTAAALgAAF7g1/QwAMADuAAFbN9A0kgJsSHugAFuc31BTTuSBQNXUwAMuyJezKTuhZXGmcZD6ENtoslpWLLSJABQuBjSbIfU6GWQwaIMaui2lYkZJDVjC2tiAFcEtJIoHISzmDX1MAQAA0BzJa6soFiZzMauzX1YAl9SHszDX8zMKRDBatb1JSu/Q6cu10IowqMbsLbqdY9CWO5nL6jl36lAm7HuAAIoFroSluWAAA2zZDLRqW5Ri6FWuIZSS5QurC6GktjQAAge7ABqW9xF8DeV2KsvItNWIIbAAAQAAAANS36GxRQAAAAAAAAAAAAAAAAAAAAE2AAAGgAAGgAAC4AADNXzFNq3mQAA1tNdLGAAAJ5dupdmYBPDgcwXLoQA0C10INTswBlNKz2ObT5eh0ug1dDTJ5nAGtWbMLLAAAlbOxj+VkFvoTZotCaMIa36FgYjmDWtzHuh3ES91sSWlZktblIgwADAyysY47FAdyW2cZL0JOrW5ytYsTJfQk6EWsAikux0WyJXVFPsAFJXLMXQ0hspIAGrqhFGdWO50MsrgASsjQCdykO5aVkSluWIoFpWJSuyxCAAOMoAGpXYykrBK5SVkErGkNjBXKxZWKJFcnlY5WUAJuyeVjlZQAodgAAwAAAAAAABqV2AGA1qxgAB3K5VY2yuAGcrHKygK6AnlZL2Z0MaTYXQEAGrdjAwFNWRICAAAYAAAAAAGb+hoHcAMauiWrHVu6IauAkQDWrMwBg1PcwABkt3sRax2SvcmUe6KTEcwLPyBYMGNXRoEK91Y5g1qxhyEPYxq5B0IaswEjDGtjR2KQM5g1qzMKJAAATBznHe6OhDdykScjGtinszChPqXZG2u0c23Z7nSG7YDOltgAQUDV1RgEMt9DV0IXUsAABq6ksopLY0LqjpZeRJRiW1zQCWNIAATGgdFF2uQvmR/C1fqTCaP4YZ9qjH0qtfBZVgamLrU6K+OcYK9l/eVGEqklCKu3svF7E1KkKUHObskm34Ld+h/obM1Lbc9eMPHhzx5v8G0+V7/8Axwr/AG/B1tYqfjwUVePDWcvrnC/3T13/AAln/Oj/AOqP6niP+MNPNbVv/TL9D2HA9deB8f2V/t5ybLs64e4jL8vxmMp0K+Lw+ZKtLDqclFT5OW8knJbHsT5lJRlF/C7NHQ4/LMdlk4xxUOy5cN0+Hg2ehy/NMDmkJTws+0o8dmuPikb9RdPoAdQdxYAACgAAAAAAABaSstgAldSrJBKz6mk3AWuLWAFcAABAAAAAAABzXUuyubZeQABa5lkaB3AyyFlY0FXAizMOgsvIZKZzB9IccuNmA4L6UyXHV8krZ7jM0xM6OHw9Or7qEVCPNOUptNKy7HjbLx2YSK/+TjEL0/Zin/unpcHp/N8fQVfD0u1B3s7pcOPFo8xjdR5Nl+JeHxFXszVrq0nx3XBWPYIkrBpWZ6+1488tjFOpw1xnTdrN4W/qH+04OeMXIuLPiPpcOv2n47IMZicFVr4PEyxkcRCpKmuacJcsVy/D3OTEaczrCUZVa1FqMVdu8eHkzjwupckxdaNGjWvKTslaXHzR5mlJXuSWuh5Y9YyZJXOb6nSZyAYAAAVHuUcy10ATJfUmyLl0OTbuy0SjXa2xIAwewtch9SyH8xSG0YY1tc0x/KyiGQAAAxra5B0Ob6spEAAFACGrMsmXUtcBI5yW1yexcuhD6DJ7gWuhlncoAVwXHoQWlZCZSNAHcgZa+VGmLZGkNjQLXyojvYtbIRRpSTuYuqLAOLAAIKAKSVjbIQ7iKt959fcXsK8Z4VeJWHjFydTTONSS7v3En+o+w11R/mtcUHiuCusMNG16uR4uG/rRmjnw0+xiacuko/Uj5MXFTwtSPWMvpkeg2hNSoQfzJxTv9TvPlcL2Pi4WV8voetOP6Ed5O0DcWXE0ujwP4WFw7xfHbQmCjZe+1HgIWfR3xVI/RpLecvqz88OiqSxnjP4UYSSvCpqvAXT9K6l+pH6HrXnL+U/0mCNdyvi6MekZeq/Q2B0FFLB1pdXH0f6k2SZoezBiYy6AAAAdwUlvcBcDLNCzZdri1gAnl23K7AE3GAASAAAAAA+gAAYtkaAAAAAAAAAAAAAAAAA7geCPjsgv8FnD6ta8oZ1Xivtof+w9a8t1dI9nPjloqfAPR9a29PUNl/OoTR6yHH4DZrRrvkFP8U/qNXNaK2oqnfGH0nw6tlRlddOp9yeCWn7z2nGCqt3dPIMfJ/5kV+tH09XS9zL6H374D8OsR7QrOa8oq+H0piZJ+XNVpR/QdjqN2yau/uv8jr9NK+dUF95fme55tNEgGq5tmADUrsAOQNs7GABSdrm3RAADocpJlXZrV4/YNCSscQa1ZmFg+AH/AB0B9Z8XOJWF4T8Dsz1nicrq5z+D1aVCjhKU1TdSpVlyxvN/LHzaT+h9FCjVxFaNKkryk0kurZ8lfEUsNQlWqu0YptvokfZfJLmfwsz3cl+T+Y8AaXjyyxxXveGmMT78ubQf+wd348sjV3LhpmTfpmtL/wDjPUvS+fx40H8Y/wDuPJx1bp6S/wCevhL/ANp56yhLlvyu3qiLO9rHhrwv8aGmOJXiVybhzLReYZDiczpVFhcZVxkK0ZVYR5+RxjFNJxUnzeaStvdeaEopLa637s6DF4LF4CqqWJh2ZNX5cPJs9HgsfhMwpe1w0+1G9r78fNI4WsZLoU+pLV0fEj7mQACxAmXUomXUpASczoQ1Yolre5Sd0aIK6LshXEnsSlcsWsCWWDV1RhqW4gLABxlIxbu50TuyIxdnc6KPcbsPmauqLMSNfTYl7lKyAMV77mi4IFuyk+iKJS6MtK5DB8Sz+LqWCq8OdQ022lLLMQrr1pSR/aP5mdxU9F5xB9JYCsn/AKOQ6e1SPivVHFV3py8H6M/PfhKieAo/yI7fYj5cpJxP59CUVhadvJL7j5Ep/CbmviaUx4H9LhbGNbx/8HKTdk9WYT80mz9CC2lL6s/PfwfTre0U4LwSu/214Zv7OZ/qP0IreMn9TAOun+8KS+6/qNhtCL93VfxL6SXuzDVuyuVGLDLBANaszUk0AE9y0rIWVzQJYABLY0AASMAAAAAAAAAAAAAAPjYrGYTA4b32Mrww9JflTla/ovM+stT8Rszy/J6tXSmjcZqvExbSTxEMLCXrFyu5fRJM+qjhq2IkowXxsl8XZHxYjF0MLByqPhySbfwSbPtYb/YeunUni14oZbnuIwEtHZVkGIg2nh8bSrzqw+x2v9T/ACn+OPxUpP4sv09US88HUjf+ke2ho3O6kFJKG/31+Sa+Z4OeushhNxbnt9x/m0/ke0EHr5yLxwV6denT1VoSE6TdpYjKca9l5qFRb/RM8lNC+IvhRr+rTwuV6lp5bms2lHL82j+C1pN9o83wz322Z0uN09nGATlWovsrmveXyv6HfYHUuSZg1GjWXafKXuv52+TPvIExfNFPZP0ZR5k9WAAAHhl43IX8N2m59eXUdNW+tGf9x6vJ2S+w9o3jdUv8VvIqiW0NSUb/AG0qh6spSvG3U2V0S75DH8U/VGsOuNtQS/BD0ZxrtOjP6Hkf7Pyi6njj1zXb/edIySVv4WJp/wBx4015WpS+h5Sez0XP4w+JdTvHS8I/fio/3I7HVDtklf8AD+aOv0pvntDx/Jnt8ABq4bXApLuSWvlQwMcdnuc2rLqduxyltsArkAABmpXZfaxKW1ygJucZdSTpNHO1y1wHxB4w+MCl7zwNZ+0r8mY4GT/06PKBR8zx28VlBVfArrWVr+6eGqfdXj/ed9ksuzm+Gf34+p53PY9rJcSl/wDhL0PTvFK72OjjFQe3Y5cyTe5k6rVOT9PI2xfA1ASsfY/hGoTxftYtG8sHKnQwGPrTt2th5K/3yX3nvKmrU72PSz4HaSxHtNKtZJ3oaWxzvfo3Kkv1numkm4tPyRrhrCblnNukV6tmzmjIKOTX6yfySR8fruCuWxlmeEMgs5tWZhUupJyEAmXUoyyY0BBMuxb6ktbFifAuPylEroVdeZDIAAEWDoczoAx1Z0UUlv07n8XUWosk0hofMdSahzGlleUYGk6uIxNWW0V0SS/Kbeyit29j1PcbfFDqziVmuMyXTOJxOltDK9OOHo1OTE45X+atNbqL/wAmn9T0OT5HjM5quNL3YLjJ8F3d77l52R5jOs/wWSUU6vvTfCK4vvfRd/wuewDiB4luFHD2tXwWMz39n86o7Sy3Jkq9SL8pzXwQ+88Zc18d2PlipwyDh3h4UV8k8yzOTk16qnG35z17KSUbLb7P1f8A+nRT+FbmZ8Ho7JsPD/Ni6kusm0vgrerMIYzWmeYqd6UlSj0ik38Wm/kjzkj46NdqactFZC4X3iq9e9vK5/rsj8eeEliFDU3DqvQpX+KtlWZRqOK8+Sok39D12yqKz9FufGlNSla6udhU0tkNSPZ9gl4OS/NnXU9V6gpO/wC0N+Ki16HvS4c8auHHFLDuOkdQ0sTmMIc1TLcV+JxcPP8AFy3aXmtj7FznNcv0/pLM89zTELC5ZgMNPEYmrKPNyQgrydu+3Y/PZhcTjcvzjDZjluMr5fj6FRVKGJwtR06tKS6SjJdGea+H8UtfVvgV4gaH1vUita/sQqGXZhD4VmkZVIxlzLtVjG7f8JJvsY6zPRVShXhPCSc6cpRTX80U2k30aXhdcbNGScs1xCvh5xxcVCpGLcWvsyaTaXc3brZ8NmeTNHxrcDZ4eM5YvPaV9+WWSzbt9jPkf46vAdfNnGb0fPmyOqeoZQi12f0Vl9xwxNOP4PPrblPWPRGS8nP/AHf9J5Ba7zvmof7f+o98PDjjNw44svM46E1LSzytl3J+GUFSnRqUlP5ZOM0m12v0ufYWbJPS2Zp/9p1f6jPVl7OXATrcV+L+cyheNHB4LCRm+zlOc2v6Nz2p46DqZJjaaTvLD1I/fFmF85wNHLc0lhqLbjHs8eO6TM25Ljq+ZZTHE1klKXa4cNm0fnXpJxgo36N/pPkuXwpd7EzjyYzEQb+WrNfdJol9GbXPfc1I4Ox/rOBcYy9pBwavvbUlJ2/mTPf3icVh8DlNbF4vEU8LhaNJ1K1arNRhBd229kl5s/PfwyzvLdJeMvh7q7Op1KWUZNm0cZi50qfvJuMYS2S9XZfafb/FvxBa04w53Wjj8RUybSkal8FkeGqtUoxXSVVq3vJ/XZdjFue6fxed5tT7D7FOMd5P8T2S5v5LmZXyLUeEyLKJqS7dSUtor8K3b5L5vkuZ7A9deMXhjpTF4nA5DHF63zKlPlf7HxVPCp9/x0tn/NTPoPMPHfqueJqLK9BZRhqC+T8Kx9WrL7XFJHgY58se23a5zdbbZrY7vC6PyLDwUZ0/aPrJv0TSR0GK1lqDEzbhU9mukUvVptnnjgfHhq+Fe2Z6CyfFU1Lf8HxtWi7el00fcmk/G/w3zfGUcLqjKcz0dVqOyxE0sVhk/WVP4l/mnqsUua45FLe9i8RpDIa8bKl2H1i2vVtEYfWGoMPJOVbtrpJJ/NJP5n6DdP6kyHVelsPnWms2wueZXW/e8Vg6qqU35ptPZ+j3R/cPQdoHiXrThZqyOb6Pzepg7yvisHP48Nior8mrT6S+q3R7dOBPHzTXGrRrnhUso1Xg6aeZ5NUqJyp9veU3+XSb/KXR7Mw5nul8Xk6daD9pS681+JfmtvAzRkGqsJnLVGovZ1ul9n+F/k9/E+/QLp9HcdEeBMhA+ude8WNB8NMtjX1fn9DLq0ouVLCQvUxNX+TSjdv6vY+lfEp4hafCvJKemdMTo4rXeOo+8i5/HDLqLulWnHvJ/kx79T1PZtnWa53n+LzbOMyxGa5pip8+JxeLqOdWq2+rk328lsZM0/pKpmdNYnFScKT4Jfal378F37t8ttzFuotX08rqPC4SKnVXFv7Me7bi+66S577HsN1P468BSxE6Wj9D18bBTt+E5ti1QUl6U4Jv72j6+q+OriD75uno/IIU29ourXk19WeDsqrvscnXvHrYy1S0rkFKPZ9gn3tyb9V6GIquq9Q1Zdr27j3JJL0Z58YDx9Z7hp2zrhxgsZC6vLA5pOk0u+04tP70fd2ivG9wZ1Ni4YTPsTj9B4uTSTzignh5PyVanzJfzrHqQqS54tH+Jzuc3Wo4TCRdbGVqkadGlFX55ykoxjb1k4o+HGaPyKtTbhB031i36O6OwwOsNQUqqU5qoukkvVJM/S/l+PweaZHhMyy7F0cfgMVRjVw+Jw9RTp1YSV1KMk2mmu6PmH1fwZ0LHhr4W9D6KTcq2WZTShiW27uvJc9V79Fzyey6H2ga21o04VpRpu8U2k+qu7PzNmKMqk6MZVFaTSuujsrryAHdLuxfY4TnP8jqfJ4YqkszheVehBKUXunG77ee5/iE+aKfXyPtPOKsKOmsbOf+ScV9p9Vx2pQT/go77Bzk6Vny4HncbTjGtdcXxP8AJav0VpvW+np5dqLLYYxOPLQxEfhxFB/woT6r6PZnrp4pcLM84a6lSxElmWn8TNrL8zpxtGff3c1+TNeXRns8qOy26n+d1NkGV6u0JmOns5oxrZfjKbUm18VKX5M4vzi7NfQ91k2c18tqqMnek+K6d66Pu4P5mPc7yPD5nScopRqrg+vc+q7+K+R6i5yTj9D+bXpqp0Sve680/P0P9Tq/TmY6M4kZtprNY8mLwVdx5m7qrB7wqLzUo7n+WlLv6GeYShUgpQd0914GAHGdObhNWadn4o+++FXir4hcKsfg8tzipW1pomnNQqZfiqt8Rh4X60Kr3VuvJN8r7bntg4e8RNK8UeGeD1Zo7M45hlVf4Zxfw1cPU/Kp1YdYTj3iz0JYuEa1KUWf2uGHFfVvA3jJQ1TpmpLFYCrOMM4yic2qOY0b7xa7VF1jPqns9mY4z/SmHx9OVfCpQqrfbZS7n0ff8eplHTmrMTgKkcPi5OdJ7b7uPhza7vh0f6DQf4/QmtMg4icKsi1ppfFrG5JmmFVfDz/KjfaUJrtKLvFp9Gmf7A14nCdObhNWa2a6M2OhOFSCnB3T3T7meH/jaX/Ud4SXdakwv9Soep51Lx2PbH421/1F1N+Wo8Hv9lQ9SEpPe5shoffIv9c/6TWbXd/+IP8ARD+oYidqT9UeWns6aXP4n+K9dq7hkGGjd/xsQ3+o8P69T8VL6HmV7OGz488YXazWU4FL/TVTstWbZHW8F9UT4dIq+fUPF+jPbbyu/wBT6i4q8atE8H8Hk1XVtXFyq5pUnDCUMBhffTagk5SaukkuaPXzPt9/K35bnrD8eeYe84wcPMs5uaNDKcTXt5e8rKP/AO2YE09l1HNM2hhq1+w+03Z2eyvx352M/akzKvlWUVMTQt204pXV1u7cNuVz78XjY4M8qvHP1t3yj/8AuTPxv8EKFPmrVdQQS/8AEr/3j1ORUeVbH8TPeWGR1pJdUZknonJErrt/7v8ApMLU9c55JpPsf7f+o9/vDLihpLi5wuoav0ZjKmMympiKmHkq1L3VWhVpu0oTg3s+5/v59zwk9n/l7wvgCo4yUUnmGpMfiNujSlCkvu92ebz+VmCMyw9LC5hVoUvsxk0r8djP+WYipisBSr1PtTim7cNzgF1RUjY9DrDtmfVPFTjJozhBkuV4vVlbFOeY1pUsFhsDh/e1anKryla6SS23bPpn/Ha4L91n0X/5qv8A7Z9YePmNsg4XVP8AlmNj/q4Hrf8Ayn9TNWn9LZVmWVU8VX7Xal2r2lZbSa4WZgvUOq83yzOKmFodnsR7Nrxu94pve/ee22XjZ4J2vKpnyXd/sNLb+kfanB/jxw9424XO5aJxeKeIymrGGMwuYYZ0K0Yy3hNRvvF77no2xMlHB1WtnyM82/Zs03+3bjVWfall0b/zq5Gf6XyzLcsniKDl2o2teV1u0uFl1ObT2qs1zPM4Yev2ezK/CNnwb6voex3XfEjRnDTIcFmWtM6hkuDxdd0MNUnSnP3lS1+W0U+x4scdeP3CDWvhK1xprT+saOOznF4JRwmH/BK0XUmqsJJJuNr2R/A8e2NhT0Hw2wW/vKuaYqqrfxaMV/tHrajPdX3K0zprB4vBUcwqSkpqV0la3uy25X5b7nFqnU+OwuNr5dThFwcUrtO/vR35257bHyG23fzJldwa3e3Ynm+hjldO5mswimfbPhb1zpPhH4u861prbGYjBZTV09VweHeGwU8RN1Z1qUrWj0XLB7nsLqeOLgHBbZlnlXr8uQ1P1s9SFXlb3V0fFlTpSveB4rMNK5dmWJeIrOXaaS2dlt5M9zl+rMyyzCrD0VHsq73V3v5o9ucfHHwGktsbn/8A+gT/AN4/3fC/xMcK+L3E3MdJaQx+OeeYTBfhf4PmGBeHeIp83LKVO73cLq6PSXKnShQnJR5Wk9jyM8A8Vi/aQZ5iIxclQ0him7b2vWpI8dnGlMrwGXVa9Jy7UVdXldcu5Htcl1bmuYZjToVVHsydnaNnz7z3SSS/McjvU/UcLMw2uBmwAAoRMugj3NfQXVi1wEuBBqV2YVHqMorsADjFzHc7q8d2+W/R3sc4JOV2eO/im4j1uHfhRzieX4hUM+zySyrLpJ2lDni/ezXrGmpWfm15H1YTDVcbi6eGp8ZtL48/JXfkfHjcVSwOEqYmp9mCbfly83ZeZ4FeKXjhX4m8Va2l8jxdtC5FiZU6MaT/ABeYYmLcZ12u8U7xgvLc8WU7JbXb6nNJW2lsunp/x+kTly0m12RtdgsHQy/Cxw1BWjFfHq33t7v/AODUPG43EZjip4mu7yk/guSXclt/3Nq4hU4O7R/pdD6J1xxM1XLJ9C6exWfYqDXvp0YqNHDrzqVH8MF9Xf0P6/BbhPnXHDjxh9L4CrVwWRYaP4TnuZwjthcNe1ovvOb+GK+r7HvE0bojTOgOHmA0tpXKaGU5ThIpRp0oK9SS61Jv8ube7k/sPH6h1LTylqhSip1Wr25RXJvx5Lpuz2mndL1c4Xt60uxSTt3yfNK+23N+S3PWpkvgR4n43AU6+d6x0/kFSavLDUoVsXOH86KjFnwNQeBbi3lWWyxORakyDVVSLv8AgsZVcJVkv4rqXjf0uj20K9luGm11/MYtWsc8jPtdqPh2Vb1v8zLEtE5C6fZ7Er9e07+lvkfnv1BpzUujNV1dP6uyPF5DnNN74bF0uWUl/Ci+k4+sW0fy7Xafa19u6PezxV4UaU4tcLMRp3UWEpqsouWX5jCC9/gKttqlOXVLzjezV/Rno/1bpLUHD/iznWi9T4f3Ga5bX5JTW8KtN7wqxfeMlZr7V2Muaf1FSzqm4Sj2aseK5NdVzt1XLwMNah05WyOopRl26UuD5p9Hyv0fPx2P5S+U4Yt2wFT6HVS2t958HH1FHL6jf6T2cvsni4pNnsf9nLl9Gnwa4oZuqdq2I1NSw8pfxaWGi0vvqM9jFb4sHWS6+7l+hngp7PfCQo+CjPMZGzeK1hjJSdv4MKUF+g866m2Gq/8Ak3+g1T1BN1M6rv71vgkjbPT0OxkdBfdv8W2fnYxKtnWOT6rFVU/9JI5v5SMZKX7YcyX/AC2t/aSOMptI2rW6RqbL7TMnTg6vO4pyXRnx3jK0sfQwOBpVMXjK0/d0aFCm5zqT/gxjG7b+iPh4/FzpUVGmpTqykowjCN3Jt2SS7ttpJd7nt98K/hny7hfojA601fgKWN4l5jQjUnKtBTWU05bqhT8pLbml1vt2PM51nWHyXD+0nvJ7Rj1f5Jc3+Z6fJMjxGd4n2dN2ivtS6L82+S+Ox4ZaJ8HHG/WmVUMxzKjl+hcBVip0lnNWUsRJNd6NNNw/nO59lT9n9ruGAjOlxLySvjUt6dTLK8Kb/nXb/Me1GyTb63F7dDCtbWeeVKnajKMV0UU/m7tmcaOicip0uzOMpPq5NfJbI9IOu/Ddxh4aYetjc408s6yOkr1MzyWo8TSpx85xspwX2M+mVUg43W69D9EbpxmndJJ7P1Xl6r0Z6vvGB4fcNpaE+Keh8BDCZJVrKOoMuw8OWnhZy2jiYJfLGUnaceibUu7Pd5Bq946vHC41KMpbRktk30a5N8rbN7dDH2otG/sFCWLwUnKEd5Re7S6p80ud1dLfqeC8pqT2d0/znzNN6w1Jw74n5TrLSmMeEznLq3vIP8mvBv46U10cZq6a6dGt0fyIVHKN7cvo+qJrwhVoyUt7oyrVpU61Jwmrxas0+aZiijVnRqxqQdmndNdUe/zhfxCyTipwRyHW+QvlwuYYdSq0XJOeGrLapRl/GjLb6WP9nmWMo5bkONzDFTUMLhcPOvWl5QhFyl+ZHqX8AfE6vkXiB1Rwpx+IcsrzzDSzLK6cpbQxVFfjYxX8en8T9YHsk43Vq1LwfcTq2Gk4146YxrpuPX95l0NVc1yj9gzr9jT92Uo9l/dk16Xa8jbHK83/AG/JP2z+aMZXX3op+tk/M9I+tdZY/X3FrUOsMzqyqYnNcZPEQUpX93T3VKn9IwsrH+alUv6s/k0J2w9JLooJL7jvKo+T7DaqFKFKCpwVlFWS7lsvQ1NlUnVm6lR3lJ3b73u/U+LT/ZrPtcZbpfS2VYjO9QZjU93g8DhafPUqy67LySTbb6JXPM7TfgF4tZplFLF6m1tkWmq9SCbwdKlUxlSm/KU0oxb+h/nfAU8gp+OrP1nHunn1TTdSORSq9VL3sHXUPKTppfzUz3MJWSs1y9rGG9TalzHL8d+y4a0Ukndq7d+l9rfmZq0vpjLcfgP2rE3k22rJ2tbrbe/5HqP1D4B+LGX5VVxGndZae1JXjH4cJXp1cHUqPyU2pR++x9U+HPw/cRsb7SvIMt4m6KzHIMr0vGWcYp4zD3w9d03ahGNRXhUUqjUtne0bnvHav3sFFKCVkl5JbHjpawzaphp0KrUu0mr2s1fblsz2kNHZRRxUK9FOPZadr3Ttvz3C2W7u+7Xc4YzE08HllfFVVeFKLk15+h8jsf5TVdeSy/D4RP8AfZ80vouh4alD2lRRPdVZ+zpuR/nMDnmOw2b4jGVfx8MRK9Sk5bJdreVj/WLVGW+6Tkq6f8H3d/zn+HhCPKlYtwil0O7nQpVHdr4HQQxFamrJ/E+dm2bVM1nycrpYSMrqF95P1P4skkrHaVktlY4Sex9EIRhHsxPmqTlN3k9z4lbofBnNxbPmVpbdD+ZUb5z64I+SfA8QfFVpONfJMm1xhYctfDy/AcdJLrTk70pP6PmV/U8JJSvue1Hi1lEc88NGtsvkk5fsXUrU79p0/wAZF/0X956pVVU6aldXau7dNzN+mMTKvlzpy403bye6/MwVqnCxoZn7SPCor+a2fx2Zsmfy8Xh6eIoSU1vv0PmymcJS2fme14niuDPK/wADnGPE6N4+1eEOeYp/tc1LVlVyfnk3HDY9Ru4R8o1Yp7fwkvM9wad4KS6PzPzS4/Msbp7VWVamyutLDZlleLp43C1Y7OM6U1Uj/Vt9Gfo40hqPCav4V6c1TgZRlg83y2hjaXLK6Sq01O1/Rtr7DXnW+XRw+NjioKyqXT/EufmvQ2N0NmUsVgZYWo7unw/C+Xk/U8ZPG67eCWT8tQ4J/wBc9Q8p8zv5nt38b+3gfq//AGgwX6Znp+958KfoZA0N/A/9cv6THOvF+/8A/RH+oiu37qf0PNT2bqvxx4xzXRZZgF/rqp4S15/uebPNf2bEubjXxmXb9jcA/wDW1TsdXO2R1vL6onxaQ/j1Hxf0s9uTV10ueoHxs5m8Z43KWD3tgNOYWm9+85Tqf7R7fWnyO3Wx6UPF5ip1/aGazUpbUcJgaUV5Ww0X+lmK9CwUs7cukJfPsoytr2bWRqK5zj8u0z6DU1yrvsf57Uda2n6yTsz+kqnwo/zWp63Lp6r9L9TYWp9lmulH7aPdp4J8J+B+zS4aSUFF4qjisTP1c8XV3+5I8q38rPoHwr4N4D2dXBrDuKi3pfD1Wl51E5v+sffz+VmoWZS7eY15dZy+pm4+Ww9nl9CPSEfpRxfVi7QfUw661ztWeAnj2pc/DrhrX2/F5vioN/yqCf6j1ptW6ns58eFJPgtoOo38ufVl9+Hf9x6xZzV2vU2X0c28gp9zn9Rq1rRW1FV8IfSfDxf/AFlV8rM86vZsRUs5431O3vctjv8A/iGeCWLlbBVN+x53+zUi+fjlUtt+GZal/mYhk6wf7kqf6fqRzaM3zyn/AKvpZ9l+OXR2tdVVOGj0lpbNNS08LLGvErLMI63unJU+Vyt0vZnr9zbhxxN07p/E5tn2gM/yjLMNHmxGLxeWThSpJu15S7bux7/pSfNts13TPHfxXTf/AEPviTzXkvwOls3/AOHpmOtP6mxWFVDLo04uLkle7v70t+7a5knUWl8NiniMylUkpKLdrK3ux+O9j0txqJxTfW250c7Rbe58JNp+ZU6n4qX07mwbRrpzPlZLlWptW59jMt0jpzMdS43C0ffV6GWYSVedODduZqO9r9z+5V4ZcYIO0uFmrF/+QV3/ALJ5Jez2k5eMHiTK7XLpSn09cV/7D29e8kvy5feYkznVmLyzMZYaFOMkkt22nur8jMOS6QwuaZdHEzqyi23sknwduZ+eTE8OuLkMLP8A6VurX8L2WnsQ3/VPK32e3DzXOSeJ3iNqrVGjs207l0chjl9DEZpgZ4bnryrwm6cVUSbajHdpWPbY6sr/AL5L/OZDqNxcbv633PHZjqzFZlhJ4aVKMVJWum+q6+B7fLNIYXK8XHERquTi72aXf08SJu8jm31Rbd9zm92eARkMN3SMAKAHM6HM5AL5UErM0EXEAAIZ2po9X3jx1HUxXG3RmlYVnKhl2T1MZOCXSpXqcqb9eWH52e0Omvguem7xnVpVPHvncHJv3OT4CEU30TpN2+9t/ae+0ZSVTPVJ/wAsZPz2X5sxxrirKnkLiv5pxXlu/wAjxfUkvM+JjMRGlgpSbsu78hKdmf5zUWJ5MkrRi+VuD38tmrmxMlZGt9PdpHul8FehKGk/BblufVaEYZzqytLM8VV5bS91zOGHj9FCN7fxmzy6P8hw/wAvo5TwK0VlmHjGFDC5BgqMIxWyUaEEf7FJWNRcwxEsVjqteXGUm/m7fJI3Gy7DQwmBpUIcIxS+Sb+LbKXRAGrqdWdu3sUvlX1uevbx3aFwstIaR4jYPDRhj8Liv2Kx1SMd6lGcXKlzefLJNK/aTPYUeMvjAwlPE+APWlabs8JUwmIi/JrEQj+iT+89Lp7ETw2d4ececlF+Etn6/I8rqTDQxWR4iElwi5LxjuvT5npqc1FWP5OaVG8sqW8j5E6qs7O9j+XmNRfsfU+htPL7JqZT3ke3j2fsLez8pT7z1RmUn/pIr9R5tVNqFT+S/wBB4V+z/V/Z54Jr/vkzJv8A0qPNWqrYWr/If6DUvOv4viPxy9Tb3JNsnw/4F6H5zMfVi9SZm4/9vV/7WR8adRON30SPi4ub/bBmV3/2bX/tZHOc26TTfY2zjfsr++hqNK3bfi/Vn314V9GYTX/j20vhcworE5VktOpnOLpSjeM3QS90n/8AeSi/sPemopK/R9/+PvPUd7PFRqeJziZJpSnHTeHUZNbpPE7/AH2Pbo+jNcdZ15Vc5dN8IRSXnds2T0VQhSyVVFxnJt+WyOZqVzC0tjHpkdhKyP5Ge5HlupNH5pkOb4aGLy3McLUw2Jo1IpqdOcbSVvtv9h/X/K+w2UU29hdpxknF2aJlGM4OMldM/PFqrT9fR/FPU2k8Xf8ACMnzOtg5OXWShK0ZfbFxZ/nnO3c8gvFnlsMs9oPr6NKMYQxSwuLSj5zw8HJ/a1c8cZ1OVO7Nx8BXeKwFGvLjOMX5tK/zuaX4/DrCZhWw64QlJeSbt8rH9Hh1qWronxk8NNVUav4OsHqPCqtN9PdVKipVU/RwnI/RBnuUYfPdC5xkFa0cLmOBrYSbte0akHH9D/MfmV1FiJUMbhcRF2lSr05pr0mn+o/TxgaqxGR4Ov8A5ShCf3xTMMa8p9jE4etHZ2kvg00Zu0FP2mFxFGW62fxTTPzoZ1lON0vrnN9M5pB08wyrGVcFXUlZ89OTg39tk/tPguoe0Lxa+F7MNZ5riuKHDrDe/wBTxpr9mcnjs8xjCNlVpf8AhUkk47KaXn19Vc6lWjjauGxFOpQxNKo6dWjUpuE6c094yi94y9H5GVslzfDZzg41qbXaSXaXNPnt0b3T6eBiPOsmxGS42VGon2H9mXJrl5rg1x9T52DxWZZJrLLdRZBmNfJ87wFeNbB43C1OWpRmntJPv1s09mtmezPhb48soq5Thcr4uZNVyvH04KFTPMppOrh6vbnqUfmpX6u11e9rdD1iRqbWMlyyteya6NDzTI8uzeCWJhdrg1s15/k7oWV55mWTzvhp7Pinun5fmrM/RDo/iHozX+QLNNG6ly7UeC5VKUsFiVOVO/8ADh80P5yR/s18qufmyyXP9R6P1ZS1FpHOsZp7PKD5qeMwFd0p/SVtpr+LJNM9sHhc8X2F4qY2joHiEsPlPEWNP9x4qlH3WGzqMVu4Re1Oqurhez6xMGZ5pHE5ZB16EvaU1x295Lq+q71w5ozvkWr8Nmk1QxEfZ1Hw391vouj7nx5M87j6/wBS1b6ppUr/AL3h1t9Xc+wFukfWWpp8mu/5eHg/0o8RgknW8me5xztQ80fGT+HYmUnY5KfwmOex3Vtzo77GTZ8eTtsVOfXc+LUn1ORI45cDjVlsfBkryPkVJdji+h9EeJ80tz+JqCEJcP8APlUipweWYhST8vczPTNSqNYWCe7UUe3ziZmsMj8O+t81lJR/B8kxDjfvKUHCP55Hp5pvlw8Y3vZWv9Nv1GXNIQfsK0uV0vk/1MP6wnH9pox59l/Nr9D5Mpq3qcJVLM5Oe73OUpmSEjGz4n8TP2p5e2+i67du57rPA/n9bPvZvaD/AAis61XLnicubfZUq8lFfZFpfYek/Omv2Jnt+Sz3E+z6g4+zkyyclZ1NQZjL/XW/UYq11CLyuMnxU16My3oKUlmcorg4P1R/a8cb5fAzWff9sOB/rTPTvz/i19F+g9wXjlk/8Ritf/viwP8AWmenPm/Frfsj7dC/wP8A1y/pOu15/Hv9Ef6iMTO2Gn9Dzi9mhJT4u8aX+UsBl356tf8AuPBPFT/cs/oec/szF/03+Nb/AOQZav8AWVz79XfwOt5fUj5dIJf+OUfP6We3mTtBtdbHov8AFHipYn2hXEyU3vTxtGkreUcPTSPehP8Ae5fR/oPQv4kqrftBeK/M7tZzb7qNMxvoJXzSq/uf1IyR/iA/3VSX3/6WfUal8KP8rquqlp2uv4j/AEH973my+h/lNWT/APe3iP5Ev0Gfaq9xmv1H/mI/RJwHoQwvgl4RUaStGOj8vsvrh4P9Z9s9j6v4JbeDXhNfr+0/Lv8Am1M+0DTfFb4qo/vS+pm52EVsNT/DH6Uc5RV0Q1ZnWXY5dWrnyn3cTwS8eb5eAeiH56imv/V5Hq2nVvJvzZ7QvH5Nw4C6FS6ftin/AM2kerBz33sbM6MX7gp/in9Rq3rX/wCoan4YfSdMTJfgc7+R7BvZtKk8j41zj87zLLk/9FW/vPXZiqv7hl3PYV7NGnJZDxsnLo8zy5f6qscesdslqeMfqOfRX8cpvul9LPZ8/mZ45eLOoqfs+uIt+ksPQi/txFM8jpfMeL/jGruh7PPXFtveVcHT+t8TD+4wRk6vm2H/ABw+pGf87fZyfEv/APnP6WemNzV3fqTUmvcyu+x8NVLt33ZlSp+InbfY24fA08W7PNX2d8qdTxT8VJL546Zw6+x4l3PbjL52vI9P/s5Od+K7ivL8n9rOHX/rTPcBL52ax6q/jlTwj6G1Gk1bI6fjL1Ob6mFS7EroePR7S5LfYkua3IKJAAAAcym3ck5AOgAOMAAAA70j06eN7Azy/wAdWIxcmnDM9P4OvT9FBTpfpie4qm9z1q+0J0nW5eHev6EG6MHXyfGNR+Tm/HUrv6xmke50fiFQz6Cf86lHzauvQx/rTDvEZDNr+Rxl5J2fqeuCdVH+dz+lOvkNdU/m5Xy38+32H9WM1KzvfyIrxVTDyj5ry/4+v2GyEldGtMPdkmfoR4Maloax8JvDnUuGnGpTx+ncLOTh0U40lCa9LSg1Y+zI9b9j14eADifgcw4L5rwmzHFqnnOQ4mrjMrp1JWdXBVpc0lD/AMnUbv5KSPYj3e99zUnNsJPAZjVw8lazdu9N3T+D+Rt9lGMhj8upYiDvdK/c0kmvivmDV8yMNXzI6Q7ws8TPGtnNDLfAVnuCnVjCvmuZYPB0YN71H71VGvolC7PLGT5YNvp6dT1H+Onixh9T8Z8q4bZRilXy7TalXzSdOV1LHVFb3d13pw2frP0PX6YwdTGZ3RUVtB9t9yjv83ZI8dqnG08FkdZye812V3uW3yV2zwf982273T3Pg5hV/wDc6f0K521v+Y+Fj5/uCf0NoZ/ZZqtT+0j3Lez8lzezxwW/TUmZf2qPNmt/1pV/kS/Qzwd9nrVjP2fEYp3cNVZlF7dPjizzgxDtl+IflSl+hmpGc/xjEfjf5G3mS/wfD/gXoz81+Mqr9sOZq/8A2bW/tZHGdS6tfY+PianNnuYSXfF1n/rZEt3j6m2sfsr++hqLL/mPxZ5meAHOqeXeODUmT1asYPN9L1VTi/ypUa0Kn9Vs9zX0PzfcOteYrhb4ktG8QcNGpVhlOYRqYyjB71cPL4K0F5twb+1I/RZkudZVqHSmW55kuNp5hlOPw0MRg8TRleFWnNXjJP7fvNe9b4OdHMo4i3uzil5x2t8GmbFaHxcKuWSw9/eg2/KW/qmj+qADGJk4GPyXV9BdXt6XP8DxP13lnDfgZqTWOZVo06WXYOU6MG961ZpqlTS7uU7fcVTpVK9aNKmryk0ku97IirWp0KMqtR2jFNt9yV2emLxN6ko6h8ePEfF0Kyr0cPmEMBTnFW/eKUINfY7/AHH0DVqczbufKzDFYvMs+x2a4+q8Rj8biKmJxVSXWVScnOb+1tn86o0otvsjc3CYdYTCU6C/kil8El+ppZiq7xeLqYh/zycvi2z/ADuLwks21vkmUQjKc8bmGHwyjFXk3UqxhZLz3P09YOhHC5Vh8NC/JRpxpxv/ABUo/qPz4+GrRtTXvtEuHGWOk62By/MP2XxzSuo0sLH3qv8AWagvtR+hZX3uYH15iIzxdGiv5U2/N2XoZ90Fh5QwdWs/5ml8Fd+pp45cXvDDww4wyrZjmmWTyHVMotQz3KlGniJPt72Py1V/KV/U8jQYww2LxOCqqrh5uElzTt/38HcyhisJhcbRdLEQU4vk1f8A7PvVmelbiN4LOMGhKWJx2nKNHiJkdO8ubLU4YyEV3lQl8z9INs8R51KlPG18LiKVShiKE3CtSqwcJ05LZxlGW8X5pn6YH09fQ8FPGV4f9Paq4JZ5xRyTLqeA1xkGHeLxFXD0klmWHj++QqpfM4r4lPrs13Mx5FrStWxEMNmCT7TSU1tu9l2lw36q3gYZz3RFCjh54nL212U24t32W77L47dHfxPUddOH16WP42MeKwOMw2aZbiauBzLC1o1sLiqErVKFSLvGpF+aaT+w/rqS92t2422bd77vufDxaU8JONr7Ga6kVKDTMKU5OE00e+zwz8W5caPCHprV2M5Fn0FLAZ3CCsli6Pw1JJdlNWqJfxj/AGeuKToZ7leMd0qlOVKX1Tuv0ngb7NPMqz0VxdyKVeTw+HzXBYqhRb2g6tKpGcl9fdxPYzq/LZ5jonEKjDmxGHarU13fL1X2o1QzHD08uz2pRjtFS27lJXXwubYZfiKmY5FTrS3k4797i7P42Pr6M7wT9A57bn83C1pTwkd+qTR2dTbdnO42dj51K6Ok5o+NOQlJ2OEpbFpEylYiUtrELdrbmXl5iW/Q51a9HDYCricTVhQw1ODnWq1HaNOKV5Sb7WRzpPgj52+bPFXxbaxhk/AbAaTo1W8bn2Mi6iXVYei1KT+jk4xPXP7xrqt/Rn2lxm17U4jcc8zz2MpLLKP7kyunJ7RoU20nbzk7yf2H1HKTUmbBZLgXgMuhTl9p+8/F8vJWRrxnOOWYZlOrH7K2Xgufm7s+Q6m/Ulzuz4rnv1JlU5Ytt7fU746Bo/kZ/XjSyqbmvhUW2u7SPe/4RtKV9I+zx4ZZbiqapYvEZY8wrq1ryxNSVZf0ZRPR/ovRuYcU/EXpDh/lkZTq5tmUKNacVzKlQT5q1R+kYKT+7zP0jYDBYTLcmwmXYGjHDYPC0IUMPRirRhTguWKXokkYR17jYuFLCxe7bk/BbL5tmddAYOXaq4qS2SUV4vd/Kx4g+OhW8COJflqHAP8ApyPTS6llY9y/jsly+AnGP/x/gP7SR6W5TundnpNCP9yP8cvSJ5jXi/fy/BH+o3ETvRl9Dzz9mXJPixxrX/Icu/tK56/q9X4J79jz99mP8XFnjXLt+x+XL/WVz79X/wADreX1I+PR/wDHKXn9LPb5L5elz0FeJhVaHtB+LEasXFyzzmjf+C6NNr8x79X8j2uejLxl5ZUy32h+sq04qMMwwuCxdO3dOhGLf3wf3GM9BTtm1SPWD+UkZM1/C+U05dJr5xZ41urtsf5zUfNU0/Xit7xaS+xn9tOy3P5mZwdXATVrpGwdRe4zXqltUTP0RcBMZRx/gi4RYrD1Y1aU9H5ek0091h4J/c019h9tnhR4Ctc0dVeAjJ8iniITzPS2NrZVXpX+ONNS95Rk15OE3Z/xTzXNPsyoyw+YVqUuUpera+TRuLltaOIy+jVjzjH0SfzRMuxxO0uxxujrTtuR6/8A2gVVQ4IcPqd1eeoqr6+WGf8Aeeq51dkefPj24k5VnHEfS/DbLqtPE18hlLHZrVhK7o1qsOWFHyuofE16o9fl3bfZ90bRaSoVKGQ0lNWb7T8m9vitzVTV9anX1DWdN3S7K80t/gzcVP8Acc9+x7IPZpTU9GcZmv8Auvl/9hUPWriJfuaW/wDxc9kvszE1onjNf/uvl/8AYVD4tZfwSp4x+o7HRa/fcPCX0ns+n8x4leNmr7r2e2qH55hl8V/6TE8tZv4jxC8cS/8Ag89Rf+dsu/5yjBeR75xhvxx9TPefbZLifwS9D0wRqmVav4qVmcIbImp+8z87G2vFGoK4nnN7NyXP4muLcrf/AEcwtv8A0mZ7epfvj+h6bvZxZjQwvjL4jZVVqKNfH6XjUw8H+X7nEpyt9FUR7k57s1i1WnHPal+aj6G02k5J5HTtycvU5v5WQW+g5V9fO3Y8cnY9nYgx/KzbWMb2aLEyAba5lrAIhp8xh0OfctAdAAQJAAAM6QdmfV3G7hrQ4teF/VeiZKKx2Lw3vssqTdlTxdL46Mm+y5kk/STPs+L3O8GnFxlumrMunVqYetGtTdpRaa8VucVWjTxFGVGorxkmn4PY/MxOljctz7H5TmeGqYLMMFiKmHxWHqq06VSEuWUWvRr9Hmd3Npdj2NeN7w05liM8xvHDQGXvFSlBS1ZluGp3nJRVljYJby2SVSKV9ubzPWfQxsK1FSUr2Vuu3p95tXlGaUM2wUa9N7/zLo+a/TqvM1OzjKa+U42VCotv5X1XJ/r0Z/qtLas1BoXiblOr9K4+WW57ltZVcNWSun/ChNflRktnF7NP0R7oeCni34b8U8kwGXZvj8PorXDhGFfKcwrKnSrT6OWHqy2nF9k7NdH0PRzz3fU5VYU6kVzRUrO6uj4c60/gs6inU92a4SXHwfVd3waPuyXUGNyWbVP3oPjF8PFdH3/FH6eYNVKUJwfNGSunHdfetjliMRQwWBqYvGVYYTC01epWrzVOEF5tyskj83mR8ReImmcFDC6d19qPJMHH5cPg86r06a/m81jM515rbUtNw1JrLPM/pN708wzWtVh/muVn9qMcR0BiPae9iI9n8Lv62+ZkeX+IFBU9sO+1+JW9L/I9sfiB8Y+mdIabx+meGOPoam1nVi6U8ww81UweW3TTlzradRfkxW1930PULXxFfE4/EYvF16mKxderKrWrVZXnVnJ3lKT7tt3bPiyxFKlR3tCKV7bJfcfKwuU55mnDzPNW4DLqtbTeT4ihh8wx/LanSq121Th6tuPRdF1sZLyvKcBkVD2dLjJq8na8nyXd3JfNmMs0zXMM/wAR7Sqtop2ir2S5/wDy38kcveHxMXK+BqbnCFfmhd3T7o4YqrfBVEn2PRSd4s83CNpo9x3s5sV7zwKZ1Rvd0dZY1NeXNClL9Z50ZvWWH0pmleUuVU8HVlfytBs9dPs0cwjX8NXEfL1K88Nq5VJRv8samFp2f3xZ58cQMW8BwG1vjk0nh8gxlW76fDQm/wBRqpnVNrPq0es/Xs/qbX5LU/cNKfSHp2v0Pzc4Wq61H3zd/eSc9/Vt/rPm3fmfxctkllOH3v8Ai4/oP6XOuU2utY1Pe7MxEFUouMkjy/8ACt4qq3BvFw0Prt4jMOHFSq5YXFUo+9rZNN9XGPWVF/lRW8Xujw4j+G4zHVsPl+Cr4+rSoTxFSGHpupKFOEeac2luoxW7fZHwKeLpYhK805dfq7df13Oox2AweaUJYfEK6fxT5NdH/e6O5wGPxmV1o4ig7NfBrmn1X97M/TRpfV+mdaaZoZzpTPMHqDLK0FKGIwWIjUir9pJO8X6NJn+iv6P7mfmPyfN84yDHPF5BnGPyTEN3dXLsdUw8pPzbg1f7T7Inx342VMrlgqnFnVc8NKPLKH7Lyu19bX/OYnr/AOH1f2n+RiF2fvRd/ls/kZWo/wCIND2f+dh32vuyVvmrr5nvo4gcUtDcMdLVc31pqHC5Ph4Q5qdCdRSxFd9o06S+KT6rZHpq8QPiJzzjdrmFKnRq5PofAVG8ryqU7yqS6e/r26za6R6RXrc8acTmGPzPM5Y3M8ficyxsvmxOMxE61WX1nNt/cSp2fp6ntMk0ng8nqe3nL2lXk2rJeC337279LHiM91Xjc5puhCPs6XNJ3b8X07lt1ufOlU2P5OPxioU9mlLtd7IqriIU6bcpWsfdHhy8P+eeIPjhQWJw9bC8NsrrRqZ9mXK1Gsk7/glN9JVJ2Sdvli23vY9ZjsbQwOGlXrStGP8AfxfI8rgMBXx2IjQoq7f9/A86/Z6cIcTkHCrPOLue4SWGzPUyjhsnjVVpxwEHzSqWfT3tSz+kEex9trorvyPh5bl+DyrI8HluX4aGDwGEoQoYehTjaNKnCKUYrySWx8bUGb4fINDZxnuLkoYXLcFVxdaT6KNODm3/AETUzMcbVzTHzxEuM3sui4Jennc21y7BUsrwEMPHhFbvq+Lf98rH0rlnif4MZjxtz/h/V1bSybUeVY6WCqRzWH4NRxNWLtJUasvhnZ3T6bo++6WIo4jC06+HqwxFCcbwqU5KUZLzTV1+c/MRic1raiz7NM8xsnWxOZ4yrjK7nvzyq1HN3v8Ayj/Vad1zrrSMo/tV1pnunaad/dZfmtalT/zObl/MZar6AhOEXhq3ZdldSV1e29mrPjfkzE1HX8qdSUcRR7Su7OLs7Xdrp3XC3Q/Sk3ZXs39Dwu8YHHbTejPDzn+gsuzGljdb6hwk8FHB0KinLB0Jq1SrVtfk+FuKi3duV+iZ6rMx468ac7wVTC5nxU1PicNUi4zprNJU4yT6p8iVz6yqValXE1K9arOrWqO9SpOblKb83J7v7WfTlWhXhcVCvi6qkotNRinu1urt8r9EfHm2u/2rCToYSk4uaacpNbJ7OyXO3VnyZVIxjZO6W33bfosfCxWIUMLLe2xE6u27sfzo0MwzvUWAyLJcJUzLN8fWjh8FhKKbqV6snaMYrvv18luzL1acYwbbsYho05TmopXZ7UPZqZJXp8OeKmp61FrD47NsLgsPUvtP3FOc52+jqxX3ns8bTTVup9I+HzhRS4NeEzS2h24VMyoUHiM2rU1tWxlV89WS9E/hXpFH3YaiZ1i447NK1eH2W9vBbL42v5m3uS4OWByujQn9pLfxe79bH0vqTK55LqGUqUGsBiXzUpfwX1cfv6H8WNRSjdNWPvTMsuw2aZNVwWIhenNX5rXcX/CR9IZplGPyXNfcYiDnRlL8TXgrxqLt9vofXhMRGtHsSfvL5nxYzDyoS7cfsv5f3yMU04/aQ1dEQc3F/ippLq5Rat9dtj/Caw4o6D0Jl86updS4PDYhRvDBUKqrYmr6Rpxd/vsdxSo1K0+xTi5Polf0OkrV6VCHbqyUUubdvU/3jXLFyk4xirtuTstu/wBPU8CfEVx2w2c0MVoPRmNWJyxy5c4zOjL4cVZ7UabXWCa+KXdq3Q/xPFzxKZ1rzLq+Q6Zo1dNaWndV26i/CsbF/wCUkvki+nKuvc8Xp1evrYytkenXQmsTjF7y4R6d77+i5c7sxLnmo1iYvDYN+69nLhfuXd1fPlsVWq9v1HwZzXMRUqXbuz4sqsVd82xklmOErHyOa3c/mZjjKeHw0pSmkrPq+m36DlisxoUKXxTXO+m//H/Hc8u/Ct4Uc64waty7iDxAwVXK+F+FrqthsLVUoVM9lF7KK6xoJr4pfldFtdnR5lmWFy3Cyr15WS+LfRd7/vY7/LMsxOZ4qNGjG7fwS6vuPJTwCcDcXkOlcdxo1TgvcZtntD8H09RrK06OBbvOtb8l1Wkl35YrzPZSk9u5xw+GoYXC0aGGpQw9GlBQp06cFGMIpWUUlskkkkux3NUcyx9XM8bPE1P5uC6Lkv753Nscsy+llmChhqf8vF9Xzf8AfKx4Y+PGXL4BcY//AKwZf/aSPSk5uzZ7p/HxNQ8AOK3tfUeXr/WSPSjzr3a87GfNCbZI/wAcvSJgLXavni/BH+o515fi5/Q9gHsxqluM/Gql2eW5fJfZVrf3nr4xE17udnfY8+fZj1l/jB8YaKXz5Hgp/dXmv9o7LV2+R1vBfUj4dIq2d0fP0Z7lN+3U9TPtEdJ1sv4s6A15h6DeEzLA1MqxU4rpVoy95TT8rxnJL+Sz2zPdNdn1Po/xEcKKfGTwsag0dTdOnnPLHGZLXqL96xdLem2+ylvBvykYD09mCyzN6VeTtHhLwls35bPyM9ahy55plFWhFXla8fGO6+O68z8/ildXT29UZJKUWpbpo5Yili8qz3G5PmmFqZdmuDrzoYvCV4uNSjVi+WUJJ9Gmrfc+5qndeptmrTjdbpmpTjKDs9j7j8PPGjNOAHiDhn9LDVsy0lmcY4bUGW0HeVWmneNaCezq03vHzTa7nvS0BxW0BxO0rQzfRWpsFnWHnFOdKnXiq9Bv8mpTb5oO+266n5yJOMoWaIpqdDE+/wALWqYavdNVKVRwkresWmeDzvSmFzeoq0ZezqcLpXT8VtuuqZ77JNWYvKKfsZR9pT42vZrwe/wP06YrE4fB4OeIxVaGGw8ItzqVpqEYrzbk0kjwe4+eMfSeiskxmneG+Ow2q9aTUqf4ZSlz4LLna3PKfSpNdVGN1e1z1C4vUWo8xwiw+ZaizXMcMlb3OLzOtVg15cspW/MfzfwmnSo2k1H6WX3HSZfoXCYasqmLqe0twilZee7bXdsd1mOu8ZiaLpYOn7O/8zd35bJLx3P6uOx+OzTOcZmeZYupj8xxlaVfFYitK861SbvKUvVtv6dD4rnu+iO0Mmz2tw6xGsKeW1/2sUsxhl8sxkkqUsTOLkqcW38TSi27dD+P79NJp3TMrwnTkrQa2225W5d1ttjE86dSLvNO733535+e58jET/c8++x7KPZlVL6W41031jmuWv76FZfqPWVVqXoyu9rbnso9mViaXuuNuD5vxzxWW1rW/J5K8f7jwWsU3kdR98fqRkHRjSzumuql9LPajJPnZ4seM7LamYezt11KEeeWClhMZZK9lTxEW3+c8qG99z/FcRtKU9dcBdY6NqNJZzlFfCRb3SlODUG/pKzNesBXWFx1Gu+EZRfkmr/K5sRmVB4rL61BcZRkl4tO3zsfnIhL4Wnt6FSlc+HVp4nLs8x2U5lTlhcywWInh8XRmvip1KcuScX5NSTRfPfozcSLUo3RptKLi7NWaP8Af8HeIWM4PeKXTPEHCUJYuhhKsqOY4Wn1xGFqrlqwXa9rSV+8Ue+TRfGbhfxA0jRzjTGtMrxdCcU50q2MhRxFF/walObTjJdz87bals9zlKlS97z8q5+nMlZ28rnhs70vhs4qRrObhNbXSTuu9bep7jI9UYrJYSpKCnB72bas+57/AAP0Qav438JNC5RUxmpNf5Ng1GLaoUcbDEV5+kadNyk2eLGjvHDgeIPjk0vw00poqtX0tm9SeGhmeLre6xaqKMp++930jTSi/hfxHqD5KVO8o04wduqVn9Lnk14E8mln/tNcqx0oKdDIskxuNdltGTiqMNu29Rnk8VpTLcqy6tXqydSSi7X2SdtnZc724s9fhNWZpm2ZUaFKKpwcle27a53b5W6JeJ72nZo4Pqdn8KscX1MLozcE7Bu7MAwIbfMYU07kloDoACCVsAABRUepRzOi6IlguJ2vGUGqiTTW/N0+09b3iN8C2D1RmmP1pwZlhcg1BW5q2M03iJe7weLm926EulGbe7j8jfSx7G+9+50U3ZI7DAZhjMsxHtsNKz5rk10a5+q5M67MMuweZ0PY4mN1yfNd6fL+7n5idT5Dq7h9qutkWvNNZlpbM6bs6WY4WVJS9YztyyXqmz+ZDM6M7bu3qj9Omfad07qvTk8o1NkeX6gyyb3wuZYOniKX+bNNJ+q3PHHOfBT4Z86xFWrLhlhcrrVHeUsrx1fCpfSMZ2X2Iyxhdd0uzbFUmn1jZr4OzMS4vQdXtN4aqmuktn8ro9Dzx1Haz3ODzWm69OjRi6labtCnG7nJ3tZJJtv7D3n4PwJeGnCVfeT0Ri8d5LFZ5iZL+sj7o0VwJ4O8OsXGvozhzkWSYxWtioYKNTEKy/ylTmlf6NH019d4JR/yqcpPvsl6s+WhoPGOX+dUil3Xf5I9R/BPwV8TOKuMwmda3p4jh3oebVRVMXR5cwxsNmvdUXfkTv8APP7tzzq8SnCPTWjfZIaw0foTJI4HLsip4fMqNGnH3latKlWg6lWpLrOo05Nyd7fYecEt9+rb3ONehRxWCrYbE0aeJw9WDhUo1oKUZxezTT2aa6pmOMVqPMMZjadeq/dpyUlFcNn83ba7+BkrC6by/B4KpQpL3pxcXJ8d18l3L4n5W1qLD8rSnB27qXVdTnPUOEnSd6ijf1R+nylw34dU6SUNAabgvKORYZfogW+H3D/p+0bT1vL9g8N/uHtXryPD2D/3L9DxC0JK9/bL4P8AU9ZHsus0nV/w1Zc7+5liMvxELRfK5clSMrS7uyjdHsT49ZhPLPBPxYxtOE6lSGlMcoRp03OTcqMoqyW76n+/ybT+n9PYSth9P5Hl2RUK0+etTy/BU8PGcvNqEUm/Vn9epThVoTpVYRqUpxcZwnFOMk9mmn1XoY0x+YRxmaPGKFk3F2v0tz77GSsFl8sJliwbldpSV7db8u65+VjC6gwdLB0qTqLmUV9H9LnynqbCKLvOKa7cyP04U+HmgaStS0Pp6mr3+HJMMv8AYLloHQ0oWlorIZR9cmw/+4ZMevU//sP/AHL9DGK0C/8A96/2v9T0peAB0M+9oi68qSxGGwumMdKonFSprnUKfLPa1mm9n1Pu7xJeBLOKGqsx1xwKw8MXgsROdbGaQVRU6lGT3m8I5bSi+vunZron2Pabk+k9Lafx+JxWQ6byrJcTiIKFergMupUJ1Euik4RTa9Gf3+rbe9+p5CvqjGf+K/t2G926ScXumlfjw67Pij2OH0vg1lf7Fife3bUls1e3D4b8mfl0zVZrpjUGIyXU2U4vIM2oScK2EzDDyo1YSXX4ZJP7ehxjmtCaTUj9M2rdB6K15k/4DrLSuVaowvSMMywNOu4b3+FyV4/Y0eOuZeBrwzZlj54j/B0svnOXNJYDNMTRg/pHnaX2Hu8Nr7DuP/mKTT7rNfOzPB4rQFdTvQqprvun8ro9FizKnFKTfw+ZeFx1fNc3o5Zk+Dr5pmNaXLQwuDoyq1aj8lGKbb+iPenl3gd8M2X1Ly4dLMN7r8NzXE1UvS3vEffWj+GnD/h9glQ0VozJ9Mw7yy/AQpzn9ZpOT+1ixGvcN2f8ilJvvsl+bDDaCxLl/nVYpd12/wAkepjgf4Gdda6xWC1BxZWJ0HpZtTjla2zTGLrZrph4vpveW+1me37SmkdN6G0Jlul9K5Rh8jyPA0/d4XCYeHLGKtu2+spPq5Pdt7s/0iSvdLd97bm9zFGbZ1j83qXrytFcIrgv1fe/kZXyrJcDlFPs0I+8+Mnxf6LuXzHe59MeIfI9Wam8E/ErT2hsO8ZqnMcjq4fBYeNVQlV5rKcYt7czg5JerPucxpNWaTXk0dJQquhWjViruLT34bNP8ju61JVqMqTdlJNbd6t+Z+WbFUc30lmUsq1NkmP09jqUvdyw+Z4aWHmmu3xpX+zY+XTzXDVIr3c1Pbqmfpzz7TWndT5Y8HqTIsuz/CNNe5zLBU8RBJ9dpp/mPobN/CB4bc6xEq2L4S5NQqyTXNgZVcLa/pTml+YzZhtfUez/AOYotP7rTXzszCeK0DVcr0Kya+8mvS6PQdDHUuz3+hyrZnQpwfPVjH6tJ/nPebDwK+GqnXjUegqsrO/K87xVn/SPsLTvhd4AaVxFOrk/CjII16cueNXGYV4uSa73rSkfdU19l6XuU5t+S/NnX09A5g5e/Uil5v8AJHoi4f8ADTiTxe1NDKuH+k8ZnKcrVMfyOlg6Cf5VStJcqXort2PcH4ZvB9p7gtWo6v1NiqWquI06TUcVGH7lyxSXxRw8Xu5Po6j37KyPM7C4TC4LL6WEweFpYPC01anQoUowhFeijsj5HQx7nGrMfmtN0YL2dN8UndvxfTuXmZEyfSeAyuarSftKi4N8F4Lr3sxKyW1vSxoB4A9+D+FqTTmUar0bjMizzDPFZfiYcsowrTpTi+0oTg1KEl2lFpo/uhpNWe6KjKUJKUXZoiUYzi4yV0z1M8cvCh4gMjrY3H8LeIOd8RNM7yjkmPzqpDMaEN7wTclDEJKyW8ZPvc9c2b4vUWltRV8t1lkWY6czWMnGpRzTC1KFVtdfnW6+jZ+n5pO91e/U/h59pjTeqsreB1NkOXagwfahmWBp4iH2Kaf3oyflmtsZg4qGIpqa6q0ZedlZ/BGMcy0RgcZNzoTcH0d5Lyu7r4n5osLqHDVaSlCUWvNbnWec4ffc98GceEDw353KvPEcKMpw1aoneeBlWwrV+6VOaSf2H+Vw3gW8NWGzCFeWgKuIUX+94jOcVOEvquY9lHX2XOO9Oafgv1PEy/w/zBS92pC3i/0PRlidQYWnFr3kYy+qv9iZ/vuHvCfi3xezaOF0HonH5lhnK08wr03hsFTT7yrzSj62V2e+LTfhx4F6QrwrZBwq07gq8Jc0K1XL44icX6SquTPuelRpUcLTo0qUKVGCShThFKMbeSWy+w6XGa+lKLWFo79ZP8l+p3uD0DCEk8TVuukV+b/Q9dHBDwA6Z0tj8HqXi5mVHXOdUmp0snw0XDLKElunUv8AFXaduto+jPYtRw1DDYSlh8PRhQoUoqNOnSgoxhFKySS2SS6JHbuDFWOzHG5lV9piZuT5dF4Lgv73Mq4DLcFltL2eGgorn1fi+LAAOrO1PBz2g+IWH9n3Uk+j1NgG3ZtRSlN3dui9Xsejief4ZXSkr+XMj9TWZ5VlmdZPWy3OMuwua5fWVquGxmHjWpT8rwkmn9qP8xDhlw5pU4whw+01CMVZJZDhrfmgZKyLVUMmwP7M6Tl7zd7rnbu7jGue6VlnOOWJVVR2StZvhfp4n5fquocKk06kE31vJf3nsQ9mBXeI8TPFarCMpUXp3DRdTlfIpfhDai3/AArb2Pbr/g44e2t+0TTn0/YPD/7h/TyTS+mtNLFx07p7LNPrEzVTErLcvp4dV5JWTlyRV7ep9WbavjmeAnhlSce0uN11T6dxwZTpGWWY6GJ9qpdnlZ9Gf6AxpNWZN35i78zFqRlA8EPFZ4QcJxcq19caAnh8l4jwpr8JoVp8mFzhJWjGb/8Am6ttlPpLZS6I9Oep8m1Zw81pX03r3T2O0vnVFtPD5hRcOddOaE/lqR/jRbufp8Vu/U/z2p9IaW1np2WVat05lupcsfTC5lgqdemn5pTTs/VWMi5Nq7G5XTVCqvaU1w395LonzXc+HUx1nWksFmlR1qb9nUfHbZ+K696PzH080w9RfDK6Orx9FK7f5j3t5v4IvDRm2NqYh8N6eXVZy5pLLsxxFBf5qnZfYZlfgf8ADRlk+aXDqGYtO/7vzTE1l93Oj3z17lvZv7Od/BfqY/8A+Asx7X/Mhbxf6HolwdbF5rnFLLcnwOJzbMa0uSjhsHQlWqzk+iUIpts88eCngM1pq7E4bPuMNetorTbanHJKE4vMcVHyqNfDQi1s+svoe2HSPDfQOgMGqGitHZPpimo8vNl+XwpTkvWaXM/tZ/tDyeZa1xmJg4YSPs0+b3l5cl82euyzRGDws1UxcvaNcltHz5v5I9ePjj0Tk2j/AGZGUZXpHIqWU6f07qDBSp4XCUW1Rp8tSEpt2u95Lmm+rd2z0vU9S0FBfFHbZ/Etj9UWYZdl+bZPicuzTAYbMsvxEOSvhcXQjVpVY9bSjJNNX3s0f5WPDLhzBJQ4f6agl0SyDDbf0D5Ml1U8qwjoTg5tycr362635n2Z1pSOa4xV4TUEopWt0vwt3H5jZalwkqbXvVut3Fr+89kfswczdfi1xhwq55U6mV4GqpqN4XjVqRacuil8a26ntXXD7QMNlofT0fpkmG/3D+rk2ndO6chioaeyHLchhiaiqYmGXYGlh1Vn05pckVzP1e5z5tq6OaYGeF9k12rb3T5p9O448o0lLK8dDE+1Uuzfaz6Nde8/sS7GL5u/3my7EmMjJ74HrN8YnhEzjVOqcw4ucJsB+GZ/Wjz6g0/RaU8c4pfuigujqbfFT/K6rd7+qaWNq4HMq+XZph62XZlQm4V8LiaMqdWnJdVKEknFryf3n6i07PdXPrrW/CHhbxIlGWudB5JqSvFWWJxmBi8Ql6VVaaX2mTMm1hiMuorD4mPtIR2TT95Lpvs7cufIxhnOj8PmNZ4jDy7E3u1yb67br0PzhfhtNxTUuvoc6mPpU6fNKW3qe9DG+Bzw1YqfNDQFTB7bRw2c4qnH7uZnzMu8FHhoy6dGp/g1o5jUpu/7vzHE1l9qc7M9m9d5d2doTv4L9TxC0HmXb3nC3i/0PQrQxmLzrN6WVZDgsRnGZVpKFHCYGhKtVm3tZRgm/vse2DwD+H/iTw31VrTiBxC0+9NRzrK6OCyrA4uVsYoqr7ydSpBX93F2irPfY9gOkuH2g9A4B4fRej8m0zG1m8ty6nRlJes0uZ/a2f62UlZpdDw+carr5nQlh6dPswlxbd38tlw7z3uTaTo5ZWjiKk+1NcLcPnuJt3Zx7lSvfuSY/RkIAAYAmSKDV0NCAAEANs2YUnZAMyzLMvtc3sSwBqdmYCSzoLXNSujUrMBLgUugAOM5LqxtmYUntYkARq+ZFkL5kWSxlJ7FHMpNtkiaKAACXEAACzV1Lvc5m3sAmiwYndGgTugACGWAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMupRLXcpICQAUBq6lnMpNJAKxRj6M0mTSTAg5PqYH1A7nIAAIB3Ml0N7kNttlIDAAUJ8AH0YBSYuCOfcGfl/Ya+jKIuQ3dmDqyuVjGS+jOZ0fRnMpO5xgADAAAAMTujTI9DQJAAAaNv8Nik9iCo9xMZQAILXA7Qd0zb/ABWOcXZFr5gDgUACGNWsVHqY1b1MvY6CGtiOjL7GWVyopCY7mGp2ZVkY0kiB3uanc0i9jU9twE0UCU7yZQFAAABqdkWt0czbsALBF2am7iauBQAIAPZE83oUc31YAWndGmR6GgAAAAAAAAAAABl0jG99gAoAAAAAAAAAAAAAAMfQaAzm36Dm26EgsAAAAAAAOhzlZu1zbtsj8sBcBy+o5fUoALcLZAACTH8rOL6s6ye9jla8mWikYCrbO5IxMB7IEye9ikInvcxvY0mXYoRi2ZvN6EgAZjfYgqXUktEAADADsBLboAiF1RZzXVHQbIAAEWi0lymmJrlIXVAM6AAhlI1dUWc11R0ENnRdEDmuqOl0SwXEx9vqdF8pBUe5IygBdeYDSudDJdDIy2KIBOxzAfVgRZUepUfl+wLogArgAAMAAAAAACl1KOZS6CaAoh9WWZZXIAR6GgAAAfRkLaW4AWAAAAEyACQAAFR7lEx7lAAAAAAAAAADAEPqzZdiSgAAGAAAAC0lykGv5EAmZLaW3mAY/lYCZLbu9wm7rcw1dUAyw+jBEnsNEpXMBKe5RYEyJKl2JAQJl1KOZaFbcEPqyzm+rGHMAAYmcwauqLLJOYOhzAATLsUc5ddhoTJ5kdIttHE6wfwlMWxYAIKABXLt1AAn0RRC2ZfYhlbXBSe1iTU7MQ2WavmRnY1fMgAsdwDjKe5TaaJAAaKi7P7Tq91scuXfqdE+xLBk9wa1uYSUdF0QC6IAQatmU1dIgtPYB3IBrW/mYA+IAACuwAADdlJpIrscyubboKxRQAJsAMsmaBAAAAAlp3KAATy+o5WUAAAAAAAAAAS31GgKeyJbuibsFAAAMAAO4EopIOPkUtkAFd3MSsiX1Zsn2IbsvMCjTHuibu5a3QEs59yo+Y5d+pqVkA7mt73OMndnRvscn1ZSQ0Z1ZfRIlfMipdChMgAPZDQuRl1cgdw9kWSTJ9iTXuzAAEt9iuxz7jRLHcvmRALEa3cwlvcy78yrC3KbsiDb7WMfRjSsBz7nRbdCF1RT7fUZFzr2Bi6GnGVcG3bMHcBo2zLXREtpoJ7iGUbZmpJoogu+wjva5VrTRPQ27vcALBKbbKExgqysSdF0RAA1fMYAAtq5FrGpu6Ka2uQVcm7sVdEAQ2rnQ1OxK6GgSWndGSXcy7RS3juBRAD6sAMAABcAAAGdARdi7ARd7C9yL3F2hWGWCebY26uKwGgAVgABjdkOwGmXRjasSFgLumY3Zk3sL3HYCuZk9wBiuAAAwAAAFJdyS49AEzSZOyNbsjnKVwBIxybZjd0YAGC18qM5dygJbAfQEt7jRJEn3I7ly6EFlrgOjNbujABAJb3aKfRnPuUgBMn2KOd7lAAAMTDdonM6EtJIogkADES1vsZZlmPoVcNyO5j7LzN7kXKFcy68wc11OgElxdrl83ocTpe4rF9xXN6FHM6CYAAEjOgJT2KJY0Co9DLOwXzIkpnWPUomPUoBgAEMa3Kj0KOa6l3TEI0uPQ53Q5rdBDsdSZdhF3QkiBriYtmbzehIAdi09vI05lJqwC4HXbltcxx2JKTd92AyQba7ZlrAHEAABgAAcYAAFXAAAGzU7M3m9CQALcrm9DHuzAA7AAAMAAAAAAXMAABgAAAs/IttcrI5vUxtWYAS3dGC1y0rXACbPyN5digBFwAZJ2iAiZSt0ZLluTa7djLWLLsa92YAMlgAXsUkSTIkttWZBQJkyJD6sDC2wMfRmkyY1xJC6EvqwChAAASwQ+pZzKSBsHGXY6tpdTk3cokktfKiC18qKZKNKT7ElRXcktMo6EpK3UoljbAAJGh3Oi3RzNTd7CYzsuiNsjE9jSCrhStLoXfZbHO29y1uvoAxzehXYh7MXdgHcs1OzMBxje47gAZSZqbTOt77WOJ07kgU1ZdSS7ps0gG7HMFtXZLW4BcXZSd0QUnvYAZSdmWt10IACudLLyOb6s27SKurdQDgQCmtiQKAAAVkAAAwAAEgAAGAAAAAAAAAAUl3KsiL2Rjm7bWAmzNdr7EN9US3cAUB3Bq6oAKSszQAIYAF0AjG7HOV2mU3cx7otIpEx7lE9Og5mMGY/mMD3Y7AHAPZEN3QbbRhyEjsS3ddDW9iAFxABj2Q0gYbsiO5rd0YWQDG7I0hvsNAUndGkJ2QuxtMloyb7E8wl1JKJEnscym97EjSJuC18qOSe3Uq7Ke4kdDbtHK78zoQXzKTbZ2OStb1LjK5LGygOwFYaBSStfuSUnuIouLSe5ZxfaxSe3XsS0M6C9n6GJ7dRsSUim03dGE3+P0KAZSbuUcyk992S0MoACHbmgbdmABrc1OzudYyucTU7EsDuDnF3fkdCCCZInudGronl9QKTM5rdSk7olrbzNWy32ANmUBdeYARvM+5vMmQ+hl/QB8TorPsbZHFu/oapNIdhlPqwZzL/hG9hDAMT38jQAAEuW4AUCeb0HN6ABQIb28hd+YAWY31Ju/MwANuzAAAAAALSVhZEXfmdAJYA6dSXJLoxiNbsyXuzL37gqwWABje3UYXMl2JAGPgA+jJctzLtssl7mGN2RvTqQ+oAL3MAAATJ72DfqSWjjAAGAIfVmvqSWgBLbuU+jOYyX0Nvcl9DSW9wJZPcAF8iDmup0OZSe1hgUXHoQXHoS0NdCk7M26U9uhIJL4nQ1OzIT6IoBpnS9wSnZGp3ZLRRpq6mAkC7pmkJ2ZSdyGikzTbuxgEUdL3BKfYoBFR7lEJ2KTuiWirmgAkAAalcB3Kj0Ku0jnuhd+YBY7XVjThd36nRO3UloTRZMupqd2Y1dkguJJt3Yx7MAWW947E2aKSshLoArkAdy0ttx3FsibMt9GA+jEHE5lJ2uSAKNbuzAAAAAq4rAACGADbOwgMFrlJblATcizM7nQx27gFybMpySM5kTLcpIbMlK6IAKGCk1YkAS2W2rMgB7IBIEy6m8yJbuy0hPcwdAS2t0MRjbbMAAOAMurhuxL3ZSJuY+rABQgZdBtJkPqUkBrd2Y9uoMk01YoTDasyAHsgJ4EyZIfUFJCF7GXVjJPsSUTwBqdmYAEdOxqdkREoAK5vQo5nQhlGr5kWc+5t2Ios1OzJTuikrsCi+wAOML3BUe5Jt7AMsEXZa6E2KTBUepIvYko6Gp2RKd7mgBXN6FHM1N3FZAWanYwEga3dmACHc1J3RZiasjQC4NTsjAKwIrZ73sOX1JNuxWHcsx9DE99zboQjEtyhe4EBjdkQa3uYBSAAAYANSuwAWfkLO5YAm5PL6jl9SjLpAK7NWyBl0Td3HYRZjdl1IbfKyLtjsUkVKXToTfYwDsUVzbdCQBiugABk8QAAsDsh2Jbuuhl2YVZCAF7EN3YwD+YwFWXL9gASAYn8TGkQ3cyXYkqXYksQD2QIuxpAHuzAH0ZYB7I59zbswCX3mXVupLd0Q3aSNurjRBoeyALJsQ92F1QfUqySACAZdC6Y2rD4nRdDTmBEnQXdupKasUJotFqV0aQupV0yB3sUuqLOZqdmBaOvNsYm+YzqrgVgOgJj1KJaGBd+YOi6IQBdS2tvI5tqzNUvIhoaNat3F35m32dwmkhFlLogc31ZXNuAFpvmLOV0WnYAKAvcEtADbu5gJAtO7NOYADoCLtIq6sAGgy6bsbZAAMcmma+jOdrAUiub0HN6EgVkUVzehqdyDU7BZAWOaxDd2YFkB15zHPY5gLIVkU5O3l9pl35mAYy18pq6nMAJly/WQAAr2AAATYAACAMujG7lWAPqZd+ZhjaXUoDTH8obVmQAgAAAG3ZN1cxvqNIlsxy3MALEAL2IfUaQBt3e5gBYGo5t3ZUuhAE3BE210ZV0jnL9YyWyDV8yMXUptWLJ4iXYy78zLXKSs7sBcTV03Iu/MptNEN7AVwIKj1JKj1LZKKABA2gWncg1PcBXZZqdmY+hie/SwrFnVO6BCdkWt0QBUZW2KOZXNuBV7HRLuUTf4UOb0J3Dcoq6sc+b0K7CKK5WOm7Mu7hu6EBSdzTmant5isO7LA7Akq47nRNNdDmBDO6tbYN2RyUmkVzXigAvmQumyAAHQErqUTYAABWYDubdmAQFKXmY3dmABpMAAB7mpXZVkQbd+YCdzXHfYcrMu/My78wC7Ns7GC78wA7sAABXYAACABje3mOwGgnm9Bzeg7AUS2rDm9CR2EAY3t5kt39BjKbsyZbmAAAAeyHYm4MbsyW7+hhViTXuzABgDG7INqxLd0NIA3cwAsACebfoOb0Am5suhzbsVKW3Q5t7AS2G7shvsY3v5GFoi5jdmLpsNXYSs+ox7lx7hvaxidg3dgPcm6uS3c3l36klbEu4NTszAMm9iuZhN/YSUvlEy0yh3AJEyk22Ucyl1AEyjbtIwCaHfc6djVuzmm7o6L5kQVcrZI29zJdDI9wHexa6lkL5kWSxsAyzv1NFYaAAEM27sVdEAAOq3Yasc02n1Lvciw7gABYq5SZt1cgCGdU7M3mZyu/M1PbcAOnMxzMnqgAmVzMKW+5IFYZd0be5zAWA6Ai78xd+YWHdlgi78xd+YrCLBF35mp7BYCgRd+Yu/Mdg3LBF35i78wsgNbaY5mSBiNbbRgMbsgGaCW/Iy78wEVdE3djAAWAAALgGN2ZLe47EtlXVjL3die5V15FiN5US1Zmt+RIADG9g+hBSQAAFAL2Jct9iQBLY7mPZGnO7Ai5rd0S3sG7IXTLSFxIJ+K5b6mFINkAAIV2ATLsUNqxTBzfRmtvmMfRiJMur9TTi077Fxb7nK0Te5YBSaSI4DNXymmXQugsUjQASJopdCjmbdgItdUdLrzOSe3U0Q9zpdA5X32Oie25LKKTs7o6Rndu+xyBLVyj5AOUZeZ0uhboEzRdeZl0QCRSOgIuyxWGAAIDU7IpPYgAB0BKvt5FX3sRYd2AAIq4AADK5mOZkgBWRafmbdeZzABY6XXmDmZd36AB1BF2LsBblgi7F2Abli68zlv5GgM6XXmOaxzADKcncy7sYAAAAYAAy6uIm5oMuibsqwrspvbYlu5gKEAAAAAAAAvYhu7KsLiXdeZD6swlvqrDSsLgVdeZL6EgYd4F15mN2RA7EN8w+rABVhLcEy7BtNEjEALbXMugCxL6mAFLYGAAJsQOcuu25d1cgaQAE3dyi+BHArm26Gp3RBqdkDRZY7k8zKJ4C4FXuyjn0ZXMw4l3KBPMzVuidgN3F2AIfE1OzKTuQar9hC3Rd35nRdEc+25t3YmxRfc1u5N0aILlp32L5fU4lqTvYCje5XN6GbepgDuWnd9DTn0ZXMxWGUDE7o0mwFJ9FY19bkdzW20IA3t5BPbzMAAVzehXY5nRdEAAACAAGN2ZNmPc0GXQugswuaDLoXQDuaDLoXQBc0GXQuhpCuaCW9thzMdkF2UH0ZN35GWd+gCF3c3m9DLO+5rVkMDG7+hgAAAAAAAxuw7AaY3Z9CW7s1JNDsBN35lr5UZyoXSQ2SzG9yW7Mxy32MbuxhcNu5gMbQCua9kQ3t5BttENu40iWUAS20yxX6lEt3XQczJANgOwMb2AO8xydrEgFpCbAAE2IGN2YbsQ3vuCQma92YCZSstiid2bZGmP5SL23HxC50BMZXuUPgFwdDmVGQmiijG7I268yX0JQzU7oq7Ij0KE0Vc6LoDF0NJBg1OxhqVwFuX1QC2QAbuS21JHRSTRzfzIoVhblp3N7nM1OyILLNTdyOb0LXVAMsAxu3qBVyrtFLoc019DbsTDidATzb9CiSd0AAIaYNuzLrzF15gUXzIcyIugAFp3NOYACtm9uprSsyAAAAAAAAAAAAroAABm3ZvNsSLrzACnLbYy7Zl0L2AABe4AVwS20yiZdRoSZl2L3MHNYsZSSaNulsc3Lcl7sBcSud2IburMGNpAI0xuzM5jG7sBBt32MAKSAGO3VoNrlIKApy8ie4NXW4EPiYDpdeZyfysB2DdkTe5gL4BcAATZIMk7RuY5didhpbXAc1yZdQ7diH8pSI4jmt5iyZC6/adB2sFz/2Q==';
+        document.getElementById('logoImage').src = logoBase64;
+        document.getElementById('headerLogo').src = logoBase64;
+
+        // Data Storage
+        let currentUser = null;
+        let currentRole = null;
+        let currentTab = 'warehouse';
+
+        // Initialize data structures
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let attendance = JSON.parse(localStorage.getItem('attendance')) || {};
+        let users = JSON.parse(localStorage.getItem('users')) || [
+            { login: 'admin', password: 'admin', role: 'admin', fullName: 'Administrator', createdAt: new Date().toISOString() },
+            { login: 'klad', password: 'klad', role: 'kladovshik', fullName: 'Kladovshik', createdAt: new Date().toISOString() }
+        ];
+
+        // Download as standalone app
+        function downloadAsApp() {
+            // Get the entire HTML content
+            const htmlContent = document.documentElement.outerHTML;
+            
+            // Create blob with HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Ombor-Tizimi-App.html';
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message
+            setTimeout(() => {
+                alert('✅ Fayl yuklab olindi!\n\n📱 KEYINGI QADAMLAR:\n\n1. Yuklab olingan "Ombor-Tizimi-App.html" faylini oching\n2. Chrome/Edge da avtomatik o\'rnatish taklifi ko\'rinadi\n3. "O\'rnatish" tugmasini bosing\n4. Tayyor! Ish stolida ilova paydo bo\'ladi\n\n💡 MASLAHAT:\nFaylni mahkamlang (bookmark) yoki Ish stoliga shortcut yarating');
+            }, 500);
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
+
+            // Check against users database
+            const user = users.find(u => u.login === username && u.password === password && u.role === role);
+            
+            if (user) {
+                currentUser = username;
+                currentRole = role;
+                document.getElementById('currentUser').textContent = user.fullName || username;
+                document.getElementById('currentRole').textContent = role === 'admin' ? 'Admin' : 'Kladovshik';
+                
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+
+                // Hide settings for non-admin
+                if (role !== 'admin') {
+                    document.getElementById('settingsTabBtn').style.display = 'none';
+                }
+
+                loadData();
+                loadUsers();
+                
+                // Auto-enable sync after login
+                setTimeout(() => {
+                    const apiUrl = localStorage.getItem('googleSheetsApiUrl') || EMBEDDED_API_URL;
+                    const autoSyncEnabled = localStorage.getItem('autoSyncEnabled');
+                    
+                    if (apiUrl && autoSyncEnabled !== 'true' && !autoSyncInterval) {
+                        if (confirm('🔄 Avtomatik sinxronizatsiyani yoqmoqchimisiz?\n\n✅ Har 5 soniyada yangilanadi\n✅ Barcha o\'zgarishlar real vaqtda\n✅ Boshqa foydalanuvchilar bilan sinxron\n\nTavsiya etiladi!')) {
+                            localStorage.setItem('autoSyncEnabled', 'true');
+                            const checkbox = document.getElementById('autoSyncCheckbox');
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                enableAutoSync();
+                            }
+                            alert('✅ Avtomatik sinxronizatsiya yoqildi!');
+                        }
+                    } else if (autoSyncEnabled === 'true' && apiUrl) {
+                        // Auto-enable if was enabled before
+                        const checkbox = document.getElementById('autoSyncCheckbox');
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                        enableAutoSync();
+                    }
+                }, 2000);
+                
+                // Show info for kladovshik
+                if (role === 'kladovshik') {
+                    document.getElementById('kladovshikInfo').style.display = 'block';
+                }
+            } else {
+                alert('Login yoki parol xato!');
+            }
+        });
+
+        function logout() {
+            if (confirm('Tizimdan chiqmoqchimisiz?')) {
+                currentUser = null;
+                currentRole = null;
+                document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginForm').reset();
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            if (tabName === 'attendance') {
+                document.getElementById('attendanceDate').valueAsDate = new Date();
+                loadAttendance();
+            } else if (tabName === 'reports') {
+                const today = new Date();
+                document.getElementById('reportMonth').value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+            }
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Reset forms
+            const forms = document.getElementById(modalId).querySelectorAll('form');
+            forms.forEach(f => f.reset());
+            // Hide image previews
+            document.querySelectorAll('.image-preview').forEach(img => img.style.display = 'none');
+        }
+
+        // Image Preview
+        function previewImage(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Product Management
+        document.getElementById('addProductForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                quantity: parseFloat(document.getElementById('productQuantity').value),
+                unit: document.getElementById('productUnit').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                status: document.getElementById('productStatus').value,
+                minQuantity: parseFloat(document.getElementById('productMinQuantity').value) || 0,
+                photo: document.getElementById('productPhotoPreview').src,
+                comment: document.getElementById('productComment').value,
+                createdAt: new Date().toISOString(),
+                createdBy: currentUser
+            };
+
+            products.push(product);
+            
+            // Add initial transaction
+            transactions.push({
+                id: Date.now(),
+                productId: product.id,
+                type: 'income',
+                quantity: product.quantity,
+                price: product.price,
+                photo: product.photo,
+                comment: 'Dastlabki kirim: ' + (product.comment || ''),
+                date: new Date().toISOString(),
+                user: currentUser
+            });
+
+            saveData();
+            loadProducts();
+            closeModal('addProductModal');
+            
+            // Auto-upload to cloud if enabled
+            if (autoSyncInterval && localStorage.getItem('googleSheetsApiUrl')) {
+                syncToCloud('upload');
+            }
+            
+            alert('Mahsulot muvaffaqiyatli qo\'shildi!');
+        });
+
+        function loadProducts() {
+            const tbody = document.getElementById('productsBody');
+            tbody.innerHTML = '';
+
+            // Filter products based on role
+            let visibleProducts = products;
+            if (currentRole === 'kladovshik') {
+                // Kladovshik sees only their own products
+                visibleProducts = products.filter(p => p.createdBy === currentUser);
+            }
+
+            if (visibleProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Ma\'lumotlar yo\'q. Yangi mahsulot qo\'shing.</td></tr>';
+                return;
+            }
+
+            visibleProducts.forEach((product, index) => {
+                const total = product.quantity * product.price;
+                
+                // Auto-detect status based on quantity and minQuantity
+                let status = product.status || 'enough';
+                let statusBadge = '';
+                
+                if (product.minQuantity && product.quantity <= 0) {
+                    status = 'order';
+                    statusBadge = '<span class="badge badge-danger">🔴 Buyurtma</span>';
+                } else if (product.minQuantity && product.quantity <= product.minQuantity) {
+                    status = 'low';
+                    statusBadge = '<span class="badge badge-warning">⚠️ Kam</span>';
+                } else {
+                    statusBadge = '<span class="badge badge-success">✅ Yetarli</span>';
+                }
+                
+                const row = `
+                    <tr ${status === 'order' ? 'style="background: #ffe6e6;"' : status === 'low' ? 'style="background: #fff9e6;"' : ''}>
+                        <td>${index + 1}</td>
+                        <td>
+                            ${product.photo ? `<img src="${product.photo}" class="photo-thumbnail" onclick="showImage('${product.photo}')">` : ''}
+                            ${product.name}
+                        </td>
+                        <td>${product.quantity.toFixed(2)}</td>
+                        <td>${product.unit}</td>
+                        <td>${statusBadge}</td>
+                        <td>${formatMoney(product.price)}</td>
+                        <td>${formatMoney(total)}</td>
+                        <td>
+                            <button class="btn-small btn-success" onclick="openTransaction(${product.id}, 'income')">Kirim</button>
+                            <button class="btn-small btn-warning" onclick="openTransaction(${product.id}, 'expense')">Chiqim</button>
+                            <button class="btn-small btn-info" onclick="viewHistory(${product.id})">Tarix</button>
+                            ${(currentRole === 'admin' || product.createdBy === currentUser) ? `<button class="btn-small btn-danger" onclick="deleteProduct(${product.id})">O'chirish</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            updateWarehouseStats();
+        }
+
+        function openTransaction(productId, type) {
+            const product = products.find(p => p.id === productId);
+            document.getElementById('transactionProductId').value = productId;
+            document.getElementById('transactionType').value = type;
+            document.getElementById('transactionPrice').value = product.price;
+            document.getElementById('transactionTitle').textContent = `${product.name} - ${type === 'income' ? 'Kirim' : 'Chiqim'}`;
+            openModal('transactionModal');
+        }
+
+        document.getElementById('transactionForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const productId = parseInt(document.getElementById('transactionProductId').value);
+            const type = document.getElementById('transactionType').value;
+            const quantity = parseFloat(document.getElementById('transactionQuantity').value);
+            const price = parseFloat(document.getElementById('transactionPrice').value);
+            
+            const product = products.find(p => p.id === productId);
+            
+            if (type === 'expense' && quantity > product.quantity) {
+                alert('Omborda yetarli miqdor yo\'q!');
+                return;
+            }
+
+            const transaction = {
+                id: Date.now(),
+                productId: productId,
+                type: type,
+                quantity: quantity,
+                price: price,
+                photo: document.getElementById('transactionPhotoPreview').src,
+                comment: document.getElementById('transactionComment').value,
+                date: new Date().toISOString(),
+                user: currentUser
+            };
+
+            transactions.push(transaction);
+
+            // Update product quantity
+            if (type === 'income') {
+                product.quantity += quantity;
+            } else {
+                product.quantity -= quantity;
+            }
+
+            product.price = price; // Update price
+
+            saveData();
+            loadProducts();
+            closeModal('transactionModal');
+            
+            // Auto-upload to cloud if enabled
+            if (autoSyncInterval && localStorage.getItem('googleSheetsApiUrl')) {
+                syncToCloud('upload');
+            }
+            
+            alert('Operatsiya muvaffaqiyatli saqlandi!');
+        });
+
+        function deleteProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            // Check permissions
+            if (currentRole === 'kladovshik' && product.createdBy !== currentUser) {
+                alert('Siz faqat o\'z mahsulotlaringizni o\'chira olasiz!');
+                return;
+            }
+            
+            if (confirm('Mahsulotni o\'chirmoqchimisiz?')) {
+                products = products.filter(p => p.id !== productId);
+                transactions = transactions.filter(t => t.productId !== productId);
+                saveData();
+                loadProducts();
+            }
+        }
+
+        function viewHistory(productId) {
+            const product = products.find(p => p.id === productId);
+            let productTransactions = transactions.filter(t => t.productId === productId);
+            
+            // For kladovshik, only show their transactions
+            if (currentRole === 'kladovshik') {
+                productTransactions = productTransactions.filter(t => t.user === currentUser);
+            }
+            
+            let html = `<h3>${product.name} - Tarix</h3>`;
+            html += '<div class="table-container"><table>';
+            html += '<thead><tr><th>Sana</th><th>Tur</th><th>Miqdor</th><th>Narx</th><th>Summa</th><th>Izoh</th><th>Foydalanuvchi</th></tr></thead><tbody>';
+            
+            if (productTransactions.length === 0) {
+                html += '<tr><td colspan="7" class="empty-state">Tarix yo\'q</td></tr>';
+            } else {
+                productTransactions.reverse().forEach(t => {
+                    const date = new Date(t.date).toLocaleString('uz-UZ');
+                    const total = t.quantity * t.price;
+                    html += `
+                        <tr>
+                            <td>${date}</td>
+                            <td><span class="badge ${t.type === 'income' ? 'badge-success' : 'badge-danger'}">${t.type === 'income' ? 'Kirim' : 'Chiqim'}</span></td>
+                            <td>${t.quantity.toFixed(2)} ${product.unit}</td>
+                            <td>${formatMoney(t.price)}</td>
+                            <td>${formatMoney(total)}</td>
+                            <td>${t.comment || '-'}</td>
+                            <td>${currentRole === 'admin' ? t.user : (t.user === currentUser ? 'Men' : 'Boshqa')}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += '</tbody></table></div>';
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close-modal" onclick="this.closest('.modal').remove()">&times;</span>
+                    ${html}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function filterProducts() {
+            const search = document.getElementById('searchProduct').value.toLowerCase();
+            const rows = document.querySelectorAll('#productsBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(search) ? '' : 'none';
+            });
+        }
+
+        function updateWarehouseStats() {
+            // Filter based on role
+            let visibleProducts = products;
+            let visibleTransactions = transactions;
+            
+            if (currentRole === 'kladovshik') {
+                visibleProducts = products.filter(p => p.createdBy === currentUser);
+                visibleTransactions = transactions.filter(t => {
+                    const product = products.find(p => p.id === t.productId);
+                    return product && product.createdBy === currentUser;
+                });
+            }
+            
+            document.getElementById('totalProducts').textContent = visibleProducts.length;
+            
+            const totalValue = visibleProducts.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+            document.getElementById('totalValue').textContent = formatMoney(totalValue);
+            
+            const incomeCount = visibleTransactions.filter(t => t.type === 'income').length;
+            const expenseCount = visibleTransactions.filter(t => t.type === 'expense').length;
+            document.getElementById('totalIncome').textContent = incomeCount;
+            document.getElementById('totalExpense').textContent = expenseCount;
+        }
+
+        // Employee Management
+        document.getElementById('addEmployeeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const employee = {
+                id: Date.now(),
+                name: document.getElementById('employeeName').value,
+                position: document.getElementById('employeePosition').value,
+                phone: document.getElementById('employeePhone').value,
+                photo: document.getElementById('employeePhotoPreview').src,
+                createdAt: new Date().toISOString()
+            };
+
+            employees.push(employee);
+            saveData();
+            closeModal('addEmployeeModal');
+            alert('Xodim muvaffaqiyatli qo\'shildi!');
+            loadAttendance();
+        });
+
+        function loadAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            const grid = document.getElementById('attendanceGrid');
+            grid.innerHTML = '';
+
+            if (employees.length === 0) {
+                grid.innerHTML = '<p class="empty-state">Xodimlar yo\'q. Yangi xodim qo\'shing.</p>';
+                return;
+            }
+
+            if (!attendance[date]) {
+                attendance[date] = {};
+            }
+
+            employees.forEach(emp => {
+                const status = attendance[date][emp.id] || 'not_marked';
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                card.innerHTML = `
+                    <div class="employee-name">${emp.name}</div>
+                    <div>${emp.position || 'Lavozim ko\'rsatilmagan'}</div>
+                    <div class="attendance-buttons">
+                        <button class="btn-small btn-success" onclick="markAttendance(${emp.id}, '${date}', 'present')" ${status === 'present' ? 'disabled' : ''}>
+                            ${status === 'present' ? '✓ Ishda' : 'Ishda'}
+                        </button>
+                        <button class="btn-small btn-danger" onclick="markAttendance(${emp.id}, '${date}', 'absent')" ${status === 'absent' ? 'disabled' : ''}>
+                            ${status === 'absent' ? '✗ Yo\'q' : 'Yo\'q'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            updateAttendanceStats();
+        }
+
+        function markAttendance(employeeId, date, status) {
+            if (!attendance[date]) {
+                attendance[date] = {};
+            }
+            attendance[date][employeeId] = status;
+            saveData();
+            loadAttendance();
+        }
+
+        function markAllPresent() {
+            const date = document.getElementById('attendanceDate').value;
+            if (confirm('Barcha xodimlarni ishda deb belgilamoqchimisiz?')) {
+                if (!attendance[date]) {
+                    attendance[date] = {};
+                }
+                employees.forEach(emp => {
+                    attendance[date][emp.id] = 'present';
+                });
+                saveData();
+                loadAttendance();
+            }
+        }
+
+        function updateAttendanceStats() {
+            const date = document.getElementById('attendanceDate').value;
+            const dayData = attendance[date] || {};
+            
+            let present = 0;
+            let absent = 0;
+            
+            Object.values(dayData).forEach(status => {
+                if (status === 'present') present++;
+                if (status === 'absent') absent++;
+            });
+
+            document.getElementById('totalEmployees').textContent = employees.length;
+            document.getElementById('presentToday').textContent = present;
+            document.getElementById('absentToday').textContent = absent;
+        }
+
+        // Reports
+        function generateReport() {
+            const type = document.getElementById('reportType').value;
+            const month = document.getElementById('reportMonth').value;
+            const reportContent = document.getElementById('reportContent');
+
+            if (!month) {
+                reportContent.innerHTML = '<p class="empty-state">Oyni tanlang</p>';
+                return;
+            }
+
+            if (type === 'warehouse') {
+                generateWarehouseReport(month, reportContent);
+            } else {
+                generateAttendanceReport(month, reportContent);
+            }
+        }
+
+        function generateWarehouseReport(month, container) {
+            const [year, monthNum] = month.split('-');
+            let monthTransactions = transactions.filter(t => {
+                const tDate = new Date(t.date);
+                return tDate.getFullYear() === parseInt(year) && 
+                       (tDate.getMonth() + 1) === parseInt(monthNum);
+            });
+
+            // Filter for kladovshik
+            if (currentRole === 'kladovshik') {
+                monthTransactions = monthTransactions.filter(t => {
+                    const product = products.find(p => p.id === t.productId);
+                    return product && product.createdBy === currentUser;
+                });
+            }
+
+            let html = '<h3>Ombor Tarixi - ' + month + '</h3>';
+            html += '<div class="table-container"><table>';
+            html += '<thead><tr><th>Sana</th><th>Mahsulot</th><th>Tur</th><th>Miqdor</th><th>Narx</th><th>Summa</th><th>Izoh</th>';
+            if (currentRole === 'admin') {
+                html += '<th>Foydalanuvchi</th>';
+            }
+            html += '</tr></thead><tbody>';
+            
+            if (monthTransactions.length === 0) {
+                html += `<tr><td colspan="${currentRole === 'admin' ? '8' : '7'}" class="empty-state">Bu oyda operatsiyalar yo\'q</td></tr>`;
+            } else {
+                monthTransactions.reverse().forEach(t => {
+                    const product = products.find(p => p.id === t.productId);
+                    const date = new Date(t.date).toLocaleString('uz-UZ');
+                    const total = t.quantity * t.price;
+                    html += `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${product ? product.name : 'O\'chirilgan'}</td>
+                            <td><span class="badge ${t.type === 'income' ? 'badge-success' : 'badge-danger'}">${t.type === 'income' ? 'Kirim' : 'Chiqim'}</span></td>
+                            <td>${t.quantity.toFixed(2)}</td>
+                            <td>${formatMoney(t.price)}</td>
+                            <td>${formatMoney(total)}</td>
+                            <td>${t.comment || '-'}</td>
+                            ${currentRole === 'admin' ? `<td>${t.user}</td>` : ''}
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function generateAttendanceReport(month, container) {
+            const [year, monthNum] = month.split('-');
+            const daysInMonth = new Date(year, monthNum, 0).getDate();
+            
+            let html = '<h3>Davomat Hisoboti - ' + month + '</h3>';
+            html += '<div class="table-container"><table>';
+            html += '<thead><tr><th>Xodim</th><th>Ishda</th><th>Yo\'q</th><th>Belgilanmagan</th><th>Foiz</th></tr></thead><tbody>';
+            
+            if (employees.length === 0) {
+                html += '<tr><td colspan="5" class="empty-state">Xodimlar yo\'q</td></tr>';
+            } else {
+                employees.forEach(emp => {
+                    let present = 0;
+                    let absent = 0;
+                    
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const date = `${year}-${monthNum.padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        const status = attendance[date] && attendance[date][emp.id];
+                        if (status === 'present') present++;
+                        if (status === 'absent') absent++;
+                    }
+                    
+                    const notMarked = daysInMonth - present - absent;
+                    const percentage = daysInMonth > 0 ? ((present / daysInMonth) * 100).toFixed(1) : 0;
+                    
+                    html += `
+                        <tr>
+                            <td>${emp.name}</td>
+                            <td><span class="badge badge-success">${present}</span></td>
+                            <td><span class="badge badge-danger">${absent}</span></td>
+                            <td><span class="badge badge-warning">${notMarked}</span></td>
+                            <td>${percentage}%</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        // Settings
+        function confirmClearData() {
+            if (confirm('DIQQAT! Barcha ma\'lumotlar o\'chiriladi. Davom etasizmi?')) {
+                if (confirm('Ishonchingiz komilmi? Bu amalni qaytarib bo\'lmaydi!')) {
+                    products = [];
+                    transactions = [];
+                    employees = [];
+                    attendance = {};
+                    saveData();
+                    loadData();
+                    alert('Barcha ma\'lumotlar o\'chirildi');
+                }
+            }
+        }
+
+        // Utility Functions
+        function saveData() {
+            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function loadData() {
+            loadProducts();
+            updateWarehouseStats();
+            document.getElementById('settingsProducts').textContent = products.length;
+            document.getElementById('settingsEmployees').textContent = employees.length;
+            document.getElementById('settingsOperations').textContent = transactions.length;
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('uz-UZ').format(amount) + ' so\'m';
+        }
+
+        function showImage(src) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px;">
+                    <span class="close-modal" onclick="this.closest('.modal').remove()">&times;</span>
+                    <img src="${src}" style="width: 100%; border-radius: 10px;">
+                </div>
+            `;
+            modal.onclick = function(e) {
+                if (e.target === modal) modal.remove();
+            };
+            document.body.appendChild(modal);
+        }
+
+        // User Management
+        function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const date = new Date(user.createdAt).toLocaleString('uz-UZ');
+                const row = `
+                    <tr>
+                        <td>${user.login}</td>
+                        <td><span class="badge ${user.role === 'admin' ? 'badge-success' : 'badge-warning'}">${user.role === 'admin' ? 'Admin' : 'Kladovshik'}</span></td>
+                        <td>${date}</td>
+                        <td>
+                            <button class="btn-small btn-info" onclick="editUser('${user.login}')">Tahrirlash</button>
+                            ${user.login !== 'admin' ? `<button class="btn-small btn-danger" onclick="deleteUser('${user.login}')">O'chirish</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Add User
+        document.getElementById('addUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const login = document.getElementById('newUserLogin').value;
+            const password = document.getElementById('newUserPassword').value;
+            const passwordConfirm = document.getElementById('newUserPasswordConfirm').value;
+            const role = document.getElementById('newUserRole').value;
+            const fullName = document.getElementById('newUserFullName').value;
+            
+            // Validation
+            if (password !== passwordConfirm) {
+                alert('Parollar mos kelmaydi!');
+                return;
+            }
+            
+            if (users.find(u => u.login === login)) {
+                alert('Bu login band! Boshqa login tanlang.');
+                return;
+            }
+            
+            const newUser = {
+                login: login,
+                password: password,
+                role: role,
+                fullName: fullName || login,
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            saveData();
+            loadUsers();
+            closeModal('addUserModal');
+            alert('Foydalanuvchi muvaffaqiyatli qo\'shildi!');
+        });
+
+        // Edit User
+        function editUser(login) {
+            const user = users.find(u => u.login === login);
+            if (!user) return;
+            
+            document.getElementById('editUserLogin').value = user.login;
+            document.getElementById('editUserLoginDisplay').value = user.login;
+            document.getElementById('editUserRole').value = user.role;
+            document.getElementById('editUserFullName').value = user.fullName || '';
+            document.getElementById('editUserPassword').value = '';
+            document.getElementById('editUserPasswordConfirm').value = '';
+            
+            openModal('editUserModal');
+        }
+
+        document.getElementById('editUserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const login = document.getElementById('editUserLogin').value;
+            const password = document.getElementById('editUserPassword').value;
+            const passwordConfirm = document.getElementById('editUserPasswordConfirm').value;
+            const role = document.getElementById('editUserRole').value;
+            const fullName = document.getElementById('editUserFullName').value;
+            
+            // Validation
+            if (password && password !== passwordConfirm) {
+                alert('Parollar mos kelmaydi!');
+                return;
+            }
+            
+            const user = users.find(u => u.login === login);
+            if (!user) return;
+            
+            // Update user
+            user.role = role;
+            user.fullName = fullName || login;
+            if (password) {
+                user.password = password;
+            }
+            
+            saveData();
+            loadUsers();
+            closeModal('editUserModal');
+            alert('Foydalanuvchi ma\'lumotlari yangilandi!');
+        });
+
+        // Delete User
+        function deleteUser(login) {
+            if (login === 'admin') {
+                alert('Admin foydalanuvchisini o\'chirib bo\'lmaydi!');
+                return;
+            }
+            
+            if (login === currentUser) {
+                alert('O\'zingizni o\'chira olmaysiz!');
+                return;
+            }
+            
+            if (confirm(`${login} foydalanuvchisini o'chirmoqchimisiz?`)) {
+                users = users.filter(u => u.login !== login);
+                saveData();
+                loadUsers();
+                alert('Foydalanuvchi o\'chirildi');
+            }
+        }
+
+        // Change My Password
+        function changeMyPassword(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Find current user
+            const user = users.find(u => u.login === currentUser);
+            if (!user) {
+                alert('Foydalanuvchi topilmadi!');
+                return;
+            }
+            
+            // Validate current password
+            if (user.password !== currentPassword) {
+                alert('Joriy parol noto\'g\'ri!');
+                return;
+            }
+            
+            // Validate new passwords match
+            if (newPassword !== confirmPassword) {
+                alert('Yangi parollar mos kelmaydi!');
+                return;
+            }
+            
+            // Update password
+            user.password = newPassword;
+            saveData();
+            
+            document.getElementById('changePasswordForm').reset();
+            alert('Parol muvaffaqiyatli o\'zgartirildi!');
+        }
+
+        // Google Sheets Online Sync
+        let autoSyncInterval = null;
+        
+        // ВСТРОЕННЫЙ URL - НЕ НУЖНО НАСТРАИВАТЬ!
+        const EMBEDDED_API_URL = 'https://script.google.com/macros/s/AKfycbyTyTUTTXgWjTizq68KifVIXhlfXsQWbxLNPGtznIjh9xtmZQHl_7vL2fNY9gw3vgvh/exec';
+        
+        // Auto-initialize API URL
+        if (!localStorage.getItem('googleSheetsApiUrl')) {
+            localStorage.setItem('googleSheetsApiUrl', EMBEDDED_API_URL);
+        }
+        
+        function saveApiUrl() {
+            const url = document.getElementById('googleApiUrl').value || EMBEDDED_API_URL;
+            if (!url) {
+                showSyncStatus('URL kiriting!', 'error');
+                return;
+            }
+            
+            // Save to localStorage AND sync to Google Sheets so all users get it
+            localStorage.setItem('googleSheetsApiUrl', url);
+            
+            // Upload config to Google Sheets
+            uploadConfig(url);
+            
+            showSyncStatus('✅ URL saqlandi va barcha foydalanuvchilarga ulashildi!', 'success');
+            updateSyncInfo();
+        }
+        
+        async function uploadConfig(apiUrl) {
+            try {
+                const configData = {
+                    action: 'saveConfig',
+                    apiUrl: apiUrl,
+                    updatedBy: currentUser,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                await fetch(apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(configData)
+                });
+            } catch (error) {
+                console.log('Config upload info:', error);
+            }
+        }
+        
+        async function loadConfigFromCloud() {
+            try {
+                // Try to load config from a known URL or use bootstrap URL
+                const bootstrapUrl = localStorage.getItem('googleSheetsApiUrl');
+                if (!bootstrapUrl) return;
+                
+                const response = await fetch(bootstrapUrl + '?action=loadConfig');
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.config) {
+                    localStorage.setItem('googleSheetsApiUrl', result.config.apiUrl);
+                    document.getElementById('googleApiUrl').value = result.config.apiUrl;
+                    updateSyncInfo();
+                }
+            } catch (error) {
+                console.log('Config load info:', error);
+            }
+        }
+        
+        function showSyncStatus(message, type) {
+            const statusDiv = document.getElementById('syncStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#d1ecf1';
+            statusDiv.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#0c5460';
+            statusDiv.innerHTML = message;
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function updateSyncInfo() {
+            const url = localStorage.getItem('googleSheetsApiUrl');
+            const infoDiv = document.getElementById('syncInfo');
+            
+            if (url) {
+                infoDiv.innerHTML = `
+                    <span style="color: #28a745;">✓ Ulangan</span><br>
+                    <span style="font-size: 11px; color: #999;">Oxirgi sinxronizatsiya: ${localStorage.getItem('lastSync') || 'Hech qachon'}</span>
+                `;
+            } else {
+                infoDiv.innerHTML = 'API URL kiritilmagan';
+            }
+        }
+        
+        async function syncToCloud(direction) {
+            const apiUrl = localStorage.getItem('googleSheetsApiUrl');
+            
+            if (!apiUrl) {
+                showSyncStatus('❌ Avval API URL ni kiriting!', 'error');
+                return;
+            }
+            
+            showSyncStatus('🔄 Sinxronizatsiya boshlanmoqda...', 'info');
+            
+            try {
+                if (direction === 'upload') {
+                    // Upload to Google Sheets - all data
+                    const dataToSave = {
+                        action: 'save',
+                        products: products,
+                        transactions: transactions,
+                        employees: employees,
+                        attendance: attendance,
+                        users: users
+                    };
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify(dataToSave)
+                    });
+                    
+                    showSyncStatus('✅ Ma\'lumotlar Google Sheets ga yuklandi!', 'success');
+                    localStorage.setItem('lastSync', new Date().toLocaleString('uz-UZ'));
+                    updateSyncInfo();
+                    
+                } else if (direction === 'download') {
+                    // Download from Google Sheets
+                    const response = await fetch(apiUrl + '?action=load');
+                    const result = await response.json();
+                    
+                    if (result.status === 'success' && result.data) {
+                        // If config is included, save it
+                        if (result.config && result.config.apiUrl) {
+                            localStorage.setItem('googleSheetsApiUrl', result.config.apiUrl);
+                            document.getElementById('googleApiUrl').value = result.config.apiUrl;
+                        }
+                        
+                        // Count changes
+                        let hasChanges = false;
+                        let newItemsCount = 0;
+                        
+                        // Admin downloads everything
+                        // Kladovshik downloads only their data (filtered client-side)
+                        
+                        if (currentRole === 'admin') {
+                            // Admin sees everything
+                            const oldProductsCount = products.length;
+                            products = result.data.products || [];
+                            transactions = result.data.transactions || [];
+                            employees = result.data.employees || [];
+                            attendance = result.data.attendance || {};
+                            users = result.data.users || users;
+                            
+                            newItemsCount = products.length - oldProductsCount;
+                            hasChanges = newItemsCount !== 0;
+                        } else if (currentRole === 'kladovshik') {
+                            // Kladovshik sees only their own data
+                            const allProducts = result.data.products || [];
+                            const allTransactions = result.data.transactions || [];
+                            
+                            const oldProductsCount = products.length;
+                            
+                            // Filter to show only current user's products
+                            products = allProducts.filter(p => p.createdBy === currentUser);
+                            transactions = allTransactions.filter(t => {
+                                const prod = allProducts.find(p => p.id === t.productId);
+                                return prod && prod.createdBy === currentUser;
+                            });
+                            
+                            newItemsCount = products.length - oldProductsCount;
+                            hasChanges = newItemsCount !== 0;
+                            
+                            // Everyone sees all employees and attendance
+                            employees = result.data.employees || [];
+                            attendance = result.data.attendance || {};
+                        }
+                        
+                        saveData();
+                        
+                        // Auto-refresh UI if we're on the products page
+                        if (currentTab === 'warehouse') {
+                            loadProducts();
+                        }
+                        
+                        if (currentRole === 'admin') {
+                            loadUsers();
+                        }
+                        
+                        // Show notification only if manual sync or new items detected
+                        if (!autoSyncInterval || hasChanges) {
+                            if (hasChanges && newItemsCount > 0) {
+                                showSyncStatus(`✅ Yangi ma'lumotlar yuklandi! (+${newItemsCount} mahsulot)`, 'success');
+                            } else if (!autoSyncInterval) {
+                                showSyncStatus('✅ Ma\'lumotlar Google Sheets dan yuklandi!', 'success');
+                            }
+                        }
+                        
+                        localStorage.setItem('lastSync', new Date().toLocaleString('uz-UZ'));
+                        updateSyncInfo();
+                    } else {
+                        showSyncStatus('❌ Xatolik: Ma\'lumotlar yuklanmadi', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Sync error:', error);
+                showSyncStatus('❌ Sinxronizatsiya xatosi. API URL ni tekshiring.', 'error');
+            }
+        }
+        
+        function toggleAutoSync(enabled) {
+            if (enabled) {
+                const apiUrl = localStorage.getItem('googleSheetsApiUrl');
+                if (!apiUrl) {
+                    document.getElementById('autoSyncCheckbox').checked = false;
+                    showSyncStatus('❌ Avval API URL ni kiriting!', 'error');
+                    return;
+                }
+                
+                enableAutoSync();
+                showSyncStatus('✅ Avto-sinxronizatsiya yoqildi (har 5 soniya - real vaqt)', 'success');
+                
+                // Show sync indicator
+                const indicator = document.getElementById('syncIndicator');
+                if (indicator) {
+                    indicator.style.display = 'inline-block';
+                }
+            } else {
+                if (autoSyncInterval) {
+                    clearInterval(autoSyncInterval);
+                    autoSyncInterval = null;
+                }
+                showSyncStatus('ℹ️ Avto-sinxronizatsiya o\'chirildi', 'info');
+                
+                // Hide sync indicator
+                const indicator = document.getElementById('syncIndicator');
+                if (indicator) {
+                    indicator.style.display = 'none';
+                }
+            }
+            localStorage.setItem('autoSyncEnabled', enabled);
+        }
+        
+        function enableAutoSync() {
+            if (autoSyncInterval) {
+                clearInterval(autoSyncInterval);
+            }
+            
+            // Auto sync every 5 seconds for real-time updates
+            autoSyncInterval = setInterval(() => {
+                syncToCloud('download'); // Download from cloud
+            }, 5000);
+            
+            // Initial upload
+            syncToCloud('upload');
+        }
+        
+        // Load auto-sync state on startup
+        window.addEventListener('load', () => {
+            // Auto-set embedded URL
+            const savedUrl = localStorage.getItem('googleSheetsApiUrl') || EMBEDDED_API_URL;
+            localStorage.setItem('googleSheetsApiUrl', savedUrl);
+            
+            if (document.getElementById('googleApiUrl')) {
+                document.getElementById('googleApiUrl').value = savedUrl;
+            }
+            
+            const autoSyncEnabled = localStorage.getItem('autoSyncEnabled') === 'true';
+            if (autoSyncEnabled && document.getElementById('autoSyncCheckbox')) {
+                document.getElementById('autoSyncCheckbox').checked = true;
+                enableAutoSync();
+            }
+            
+            updateSyncInfo();
+        });
+
+        // Google Sheets Integration
+        function exportToGoogleSheets(type) {
+            const url = document.getElementById('googleSheetsUrl').value;
+            const status = document.getElementById('exportStatus');
+            
+            if (!url) {
+                status.style.display = 'block';
+                status.style.background = '#f8d7da';
+                status.style.color = '#721c24';
+                status.innerHTML = '❌ Google Sheets URL kiriting!';
+                return;
+            }
+
+            // Show instructions
+            status.style.display = 'block';
+            status.style.background = '#d1ecf1';
+            status.style.color = '#0c5460';
+            status.innerHTML = `
+                <strong>📋 Qo'llanma:</strong><br>
+                1. CSV faylini yuklab oling (pastdagi tugmalar)<br>
+                2. Google Sheets ni oching: <a href="${url}" target="_blank" style="color: #0c5460; text-decoration: underline;">Jadvalga o'tish</a><br>
+                3. File → Import → Upload → CSV faylni tanlang<br>
+                4. "Replace spreadsheet" yoki "Append to current sheet" tanlang<br>
+                <br>
+                <strong>Yoki CSV faylni qo'lda import qiling:</strong><br>
+            `;
+
+            // Auto download CSV
+            if (type === 'products') {
+                downloadCSV('products');
+            } else if (type === 'attendance') {
+                downloadCSV('attendance');
+            } else if (type === 'all') {
+                downloadCSV('products');
+                setTimeout(() => downloadCSV('transactions'), 500);
+                setTimeout(() => downloadCSV('employees'), 1000);
+                setTimeout(() => downloadCSV('attendance'), 1500);
+            }
+        }
+
+        // CSV Export Functions
+        function downloadCSV(type) {
+            let csv = '';
+            let filename = '';
+
+            if (type === 'products') {
+                csv = 'ID,Nomi,Miqdor,Olchov,Narx,Umumiy,Kategoriya,Izoh,Yaratilgan,Yaratuvchi\n';
+                let exportProducts = products;
+                if (currentRole === 'kladovshik') {
+                    exportProducts = products.filter(p => p.createdBy === currentUser);
+                }
+                exportProducts.forEach(p => {
+                    const total = p.quantity * p.price;
+                    const date = new Date(p.createdAt).toLocaleString('uz-UZ');
+                    csv += `${p.id},"${p.name}",${p.quantity},"${p.unit}",${p.price},${total},"${p.category || ''}","${p.comment || ''}","${date}","${p.createdBy}"\n`;
+                });
+                filename = 'mahsulotlar.csv';
+            }
+            else if (type === 'transactions') {
+                csv = 'ID,Mahsulot ID,Mahsulot,Tur,Miqdor,Narx,Summa,Izoh,Sana,Foydalanuvchi\n';
+                let exportTransactions = transactions;
+                if (currentRole === 'kladovshik') {
+                    exportTransactions = transactions.filter(t => {
+                        const product = products.find(p => p.id === t.productId);
+                        return product && product.createdBy === currentUser;
+                    });
+                }
+                exportTransactions.forEach(t => {
+                    const product = products.find(p => p.id === t.productId);
+                    const productName = product ? product.name : 'O\'chirilgan';
+                    const total = t.quantity * t.price;
+                    const date = new Date(t.date).toLocaleString('uz-UZ');
+                    const typeText = t.type === 'income' ? 'Kirim' : 'Chiqim';
+                    csv += `${t.id},${t.productId},"${productName}","${typeText}",${t.quantity},${t.price},${total},"${t.comment || ''}","${date}","${t.user}"\n`;
+                });
+                filename = 'operatsiyalar.csv';
+            }
+            else if (type === 'employees') {
+                csv = 'ID,FIO,Lavozim,Telefon,Yaratilgan\n';
+                employees.forEach(e => {
+                    const date = new Date(e.createdAt).toLocaleString('uz-UZ');
+                    csv += `${e.id},"${e.name}","${e.position || ''}","${e.phone || ''}","${date}"\n`;
+                });
+                filename = 'xodimlar.csv';
+            }
+            else if (type === 'attendance') {
+                // Get all unique dates
+                const dates = Object.keys(attendance).sort();
+                if (dates.length === 0) {
+                    alert('Davomat ma\'lumotlari yo\'q!');
+                    return;
+                }
+
+                // Header
+                csv = 'Xodim ID,FIO,Lavozim,';
+                dates.forEach(date => {
+                    csv += `"${date}",`;
+                });
+                csv += 'Jami Ishda,Jami Yoq,Foiz\n';
+
+                // Data rows
+                employees.forEach(emp => {
+                    let present = 0;
+                    let absent = 0;
+                    csv += `${emp.id},"${emp.name}","${emp.position || ''}",`;
+                    
+                    dates.forEach(date => {
+                        const status = attendance[date] && attendance[date][emp.id];
+                        if (status === 'present') {
+                            csv += 'Ishda,';
+                            present++;
+                        } else if (status === 'absent') {
+                            csv += 'Yoq,';
+                            absent++;
+                        } else {
+                            csv += '-,';
+                        }
+                    });
+                    
+                    const total = present + absent;
+                    const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+                    csv += `${present},${absent},${percentage}%\n`;
+                });
+                filename = 'davomat.csv';
+            }
+
+            // Download CSV
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Show success message
+            const status = document.getElementById('exportStatus');
+            status.style.display = 'block';
+            status.style.background = '#d4edda';
+            status.style.color = '#155724';
+            status.innerHTML = `✅ ${filename} yuklab olindi! Endi Google Sheets ga import qiling.`;
+        }
+
+        // Set today's date on attendance
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceDate').value = today;
+            
+            // Load saved Google Sheets URL
+            const savedUrl = localStorage.getItem('googleSheetsUrl');
+            if (savedUrl) {
+                document.getElementById('googleSheetsUrl').value = savedUrl;
+            }
+        };
+
+        // Save Google Sheets URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('googleSheetsUrl');
+            if (urlInput) {
+                urlInput.addEventListener('change', function() {
+                    localStorage.setItem('googleSheetsUrl', this.value);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
