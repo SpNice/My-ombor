@@ -1,47 +1,88 @@
+// Warehouse and Employee Management System
+
+class Product {
+    constructor(name, quantity, price) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+}
+
 class Employee {
-    constructor(name, id, position) {
+    constructor(name, id) {
         this.name = name;
         this.id = id;
-        this.position = position;
+        this.attendance = [];
     }
 
-    displayInfo() {
-        console.log(`Employee ID: ${this.id}, Name: ${this.name}, Position: ${this.position}`);
+    markAttendance(date) {
+        this.attendance.push(date);
     }
 }
 
 class Warehouse {
-    constructor(location) {
-        this.location = location;
-        this.inventory = [];
+    constructor() {
+        this.products = [];
+        this.employees = [];
     }
 
-    addItem(item) {
-        this.inventory.push(item);
-        console.log(`${item} added to the warehouse.`);
+    addProduct(product) {
+        this.products.push(product);
     }
 
-    removeItem(item) {
-        const index = this.inventory.indexOf(item);
-        if (index > -1) {
-            this.inventory.splice(index, 1);
-            console.log(`${item} removed from the warehouse.`);
-        } else {
-            console.log(`${item} not found in the inventory.`);
-        }
+    addEmployee(employee) {
+        this.employees.push(employee);
     }
 
-    listInventory() {
-        console.log(`Inventory at ${this.location}: ${this.inventory.join(', ')}`);
+    generateReport() {
+        return this.products.map(p => `${p.name}: ${p.quantity} (${p.price}$)`).join('\n');
     }
 }
 
-// Example usage:
-const warehouse = new Warehouse('Main Warehouse');
-warehouse.addItem('Item A');
-warehouse.addItem('Item B');
-warehouse.removeItem('Item A');
-warehouse.listInventory();
+class Auth {
+    constructor() {
+        this.users = {};
+    }
 
-const employee = new Employee('John Doe', 1, 'Manager');
-employee.displayInfo();
+    register(username, password) {
+        this.users[username] = password;
+    }
+
+    login(username, password) {
+        return this.users[username] === password;
+    }
+}
+
+class GoogleSheetsSync {
+    static syncData(data) {
+        // Placeholder for syncing data with Google Sheets
+        console.log('Syncing data to Google Sheets...');
+    }
+}
+
+class CSVExporter {
+    static export(data) {
+        const csvContent = Object.keys(data[0]).join(',') + '\n' + 
+            data.map(e => Object.values(e).join(',')).join('\n');
+        console.log('CSV Exported:', csvContent);
+    }
+}
+
+// Sample Usage
+const warehouse = new Warehouse();
+const auth = new Auth();
+auth.register('user1', 'password1');
+
+const product1 = new Product('Product A', 100, 10);
+warehouse.addProduct(product1);
+const employee1 = new Employee('Employee 1', 1);
+warehouse.addEmployee(employee1);
+
+employee1.markAttendance('2026-02-01');
+console.log(warehouse.generateReport());
+
+// Sync data to Google Sheets
+GoogleSheetsSync.syncData(warehouse.products);
+
+// Export data as CSV
+CSVExporter.export(warehouse.products);
